@@ -1,0 +1,2 @@
+jekyll build > /dev/null 2>&1
+bin/mvs > /dev/null 2>&1
