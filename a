@@ -1,6 +1,6 @@
 #!/bin/bash
 msg="msgdfd"
-msg="`date +%F` update"
+msg="`date +%F`update"
 echo $msg
 if [ x"" != x$1 ]; then
    echo $1
