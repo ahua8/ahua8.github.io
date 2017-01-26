@@ -1,2 +1,4 @@
+#!/bin/bash
+
 jekyll build > /dev/null 2>&1
-bin/mvs > /dev/null 2>&1
+bin/mvs $1 > /dev/null 2>&1

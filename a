@@ -1,0 +1,9 @@
+#!/bin/bash
+msg="msgdfd"
+echo $1
+if [ x"" != x$1 ]; then
+   echo $1
+else
+    msg="11111"
+fi
+echo $msg
