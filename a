@@ -1,10 +1,10 @@
 #!/bin/bash
-msg="msgdfd"
-msg="`date +%F`updaasdfte"
-echo $msg
-if [ x"" != x$1 ]; then
-   echo $1
+#msg="msgdfd"
+#msg="`date +%F`updaasdfte"
+#echo $msg
+if [ x"" == x$1 ]; then
+   echo 'asfsdf'
 else
     msg="11111"
 fi
-echo $msg
+#echo $msg
