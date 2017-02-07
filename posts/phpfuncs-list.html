@@ -84,9 +84,10 @@
             <h4 id="函数列表">函数列表:</h4>
 <ul>
   <li><a href="#timezone">指定时区转换时间</a>
-<span id="timezone"></span>
-单台服务布署多终端,时间不一样.然后因为部分功能升级,部分业务数据按之前逻辑没有走完,没办法好做一个时间限定.小于功能上传时间的跑之前的流程.如果有了需要这个函数</li>
+<span id="timezone"></span></li>
 </ul>
+
+<p>单台服务布署多终端,时间不一样.然后因为部分功能升级,部分业务数据按之前逻辑没有走完,没办法好做一个时间限定.小于功能上传时间的跑之前的流程.如果有了需要这个函数</p>
 
 <figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
 <span class="o">&lt;!--</span> <span class="nx">This</span> <span class="nx">is</span> <span class="nx">a</span> <span class="nx">comment</span> <span class="o">--&gt;</span>
@@ -110,7 +111,11 @@
 <span class="k">echo</span> <span class="s1">'澳大利亚,布里斯班:'</span><span class="p">,</span><span class="nx">translate_time</span><span class="p">(</span><span class="nv">$time</span><span class="p">,</span> <span class="s1">'Australia/Brisbane'</span><span class="p">);</span>
 <span class="k">echo</span> <span class="s1">'&lt;br/&gt;'</span><span class="p">;</span>
 <span class="k">echo</span> <span class="s1">'日本,东京:'</span><span class="p">,</span><span class="nx">translate_time</span><span class="p">(</span><span class="nv">$time</span><span class="p">,</span> <span class="s1">'Asia/Tokyo'</span><span class="p">);</span>
-<span class="cp">?&gt;</span></code></pre></figure>
+<span class="cp">?&gt;</span>
+//output
+//中国时间2017-01-01 00:00:00
+//澳大利亚,布里斯班:2017-01-01 02:00:00
+//日本,东京:2017-01-01 01:00:00</code></pre></figure>
 
 
           </div>
