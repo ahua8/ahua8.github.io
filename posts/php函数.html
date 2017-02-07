@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Aaron | PHP 根据时区转换指定时间</title>
+  <meta name="description" content="在单点服务器上布署多语言多终端的,时间,时区是经常需要注意">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:title" content="PHP 根据时区转换指定时间">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="/posts/php%E5%87%BD%E6%95%B0">
+  <meta property="og:description" content="在单点服务器上布署多语言多终端的,时间,时区是经常需要注意">
+  <meta property="og:site_name" content="Aaron">
+  <meta property="og:image" content="/assets/documentation/sample-image.jpg">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:url" content="/posts/php%E5%87%BD%E6%95%B0">
+  <meta name="twitter:title" content="PHP 根据时区转换指定时间">
+  <meta name="twitter:description" content="在单点服务器上布署多语言多终端的,时间,时区是经常需要注意">
+  <meta name="twitter:image" content="/assets/documentation/sample-image.jpg">
+
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link href="/feed.xml" type="application/rss+xml" rel="alternate" title="Aaron Last 10 blog posts" />
+
+  
+    <link type="text/css" rel="stylesheet" href="/assets/light.css">
+  
+</head>
+
+<body>
+  <main role="main">
+    <div class="grid grid-centered">
+      <div class="grid-cell">
+        <nav class="header-nav reveal">
+  <a href="/" class="header-logo" title="Aaron">Aaron</a>
+  <ul class="header-links">
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      <li>
+        <a href="/feed.xml" target="_blank" title="RSS">
+          <span class="icon icon-social-rss"></span>
+        </a>
+      </li>
+    
+  </ul>
+</nav>
+
+        <article class="article reveal">
+          <header class="article-header">
+            <h1>PHP 根据时区转换指定时间</h1>
+            <p>在单点服务器上布署多语言多终端的,时间,时区是经常需要注意</p>
+            <div class="article-list-footer">
+              <span class="article-list-date">
+                February 7, 2017
+              </span>
+              <span class="article-list-divider">-</span>
+              <span class="article-list-minutes">
+                
+                
+                  1 minute read
+                
+              </span>
+              <span class="article-list-divider">-</span>
+              <div class="article-list-tags">
+                
+                  <a href="/tag/Web">Web</a>
+                
+                  <a href="/tag/PHP">PHP</a>
+                
+              </div>
+            </div>
+          </header>
+
+          <div class="article-content">
+            <h4 id="函数列表">函数列表:</h4>
+<ul>
+  <li><a href="#timezone">指定时区转换时间</a>
+<span id="timezone"></span>
+单台服务布署多终端,时间不一样.然后因为部分功能升级,部分业务数据按之前逻辑没有走完,没办法好做一个时间限定.小于功能上传时间的跑之前的流程.如果有了需要这个函数</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="o">&lt;!--</span> <span class="nx">This</span> <span class="nx">is</span> <span class="nx">a</span> <span class="nx">comment</span> <span class="o">--&gt;</span>
+<span class="sd">/**
+ * 根据时区转换时间
+ * @param $time 待转换时间
+ * @param $to_zone 转换时区
+ * @param string $from_zone 待转换时间时区
+ * @return string
+ */</span>
+<span class="k">function</span> <span class="nf">translate_time</span><span class="p">(</span><span class="nv">$time</span><span class="p">,</span> <span class="nv">$to_zone</span><span class="p">,</span> <span class="nv">$from_zone</span><span class="o">=</span><span class="s1">'Asia/Shanghai'</span><span class="p">){</span>
+    <span class="nv">$cur_time</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Datetime</span><span class="p">(</span><span class="nv">$time</span><span class="p">,</span> <span class="k">new</span> <span class="nx">DateTimeZone</span><span class="p">(</span><span class="nv">$from_zone</span><span class="p">));</span>
+    <span class="nv">$cur_time</span><span class="o">-&gt;</span><span class="na">setTimezone</span><span class="p">(</span><span class="k">new</span> <span class="nx">DateTimeZone</span><span class="p">(</span><span class="nv">$to_zone</span><span class="p">));</span>
+    <span class="k">return</span> <span class="nv">$cur_time</span><span class="o">-&gt;</span><span class="na">format</span><span class="p">(</span><span class="s1">'Y-m-d H:i:s'</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span></code></pre></figure>
+
+          </div>
+
+          <div class="article-share">
+            
+            <a href="" title="Share on Twitter" onclick="window.open('https://twitter.com/home?status=PHP 根据时区转换指定时间 - /posts/php%E5%87%BD%E6%95%B0 ', 'newwindow', 'width=500, height=225'); return false;">
+              <span class="icon icon-social-twitter"></span>
+            </a>
+            <a href="" title="Share on Facebook" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=/posts/php%E5%87%BD%E6%95%B0', 'newwindow', 'width=500, height=500'); return false;">
+              <span class="icon icon-social-facebook"></span>
+            </a>
+            <a href="" title="Share on Google+" onclick="window.open('https://plus.google.com/share?url=/posts/php%E5%87%BD%E6%95%B0', 'newwindow', 'width=550, height=400'); return false;">
+              <span class="icon icon-social-googleplus"></span>
+            </a>
+          </div>
+
+          
+        </article>
+        <footer class="footer reveal">
+  <p>
+    -- 勤于耕,荒于嘻 
+    <a href="/about" title="About me">关于我</a><!-- . Download it <a href="https://github.com/nielsenramon/chalk" target="_blank" title="Download Chalk">here --></a>.
+  </p>
+</footer>
+
+      </div>
+    </div>
+  </main>
+  <script type="text/javascript" src="/assets/vendor.js"></script>
+<script type="text/javascript" src="/assets/application.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Cormorant Garamond:700', 'Lato:300,400,700']
+    }
+  });
+</script>
+
+
+
+</body>
+</html>
