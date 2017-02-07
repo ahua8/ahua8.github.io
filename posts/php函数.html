@@ -102,7 +102,16 @@
     <span class="nv">$cur_time</span><span class="o">-&gt;</span><span class="na">setTimezone</span><span class="p">(</span><span class="k">new</span> <span class="nx">DateTimeZone</span><span class="p">(</span><span class="nv">$to_zone</span><span class="p">));</span>
     <span class="k">return</span> <span class="nv">$cur_time</span><span class="o">-&gt;</span><span class="na">format</span><span class="p">(</span><span class="s1">'Y-m-d H:i:s'</span><span class="p">);</span>
 <span class="p">}</span>
+
+<span class="c1">//example 01
+</span><span class="nv">$time</span>  <span class="o">=</span> <span class="s1">'2017-01-01 00:00:00'</span><span class="p">;</span>
+<span class="k">echo</span> <span class="s1">'中国时间'</span><span class="p">,</span><span class="nv">$time</span><span class="p">;</span>
+<span class="k">echo</span> <span class="s1">'&lt;br/&gt;'</span><span class="p">;</span>
+<span class="k">echo</span> <span class="s1">'澳大利亚,布里斯班:'</span><span class="p">,</span><span class="nx">translate_time</span><span class="p">(</span><span class="nv">$time</span><span class="p">,</span> <span class="s1">'Australia/Brisbane'</span><span class="p">);</span>
+<span class="k">echo</span> <span class="s1">'&lt;br/&gt;'</span><span class="p">;</span>
+<span class="k">echo</span> <span class="s1">'日本,东京:'</span><span class="p">,</span><span class="nx">translate_time</span><span class="p">(</span><span class="nv">$time</span><span class="p">,</span> <span class="s1">'Asia/Tokyo'</span><span class="p">);</span>
 <span class="cp">?&gt;</span></code></pre></figure>
+
 
           </div>
 
