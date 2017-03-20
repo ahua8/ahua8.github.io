@@ -7,6 +7,14 @@
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>Sublime简体转繁体插件</title>
+        <description>多语言常有简体转繁体的需求,所以写了它.基于Web的.离线状态不可用</description>
+        <pubDate>Mon, 20 Mar 2017 00:00:00 +0800</pubDate>
+        <link>/posts/sublime-cn2tw</link>
+        <guid isPermaLink="true">/posts/sublime-cn2tw</guid>
+      </item>
+    
+      <item>
         <title>PHP 根据时区转换指定时间</title>
         <description>在单点服务器上布署多语言多终端的,时间,时区是经常需要注意</description>
         <pubDate>Tue, 07 Feb 2017 00:00:00 +0800</pubDate>

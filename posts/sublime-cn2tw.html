@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Aaron | Sublime简体转繁体插件</title>
+  <meta name="description" content="多语言常有简体转繁体的需求,所以写了它.基于Web的.离线状态不可用">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:title" content="Sublime简体转繁体插件">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="/posts/sublime-cn2tw">
+  <meta property="og:description" content="多语言常有简体转繁体的需求,所以写了它.基于Web的.离线状态不可用">
+  <meta property="og:site_name" content="Aaron">
+  <meta property="og:image" content="/assets/documentation/sample-image.jpg">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:url" content="/posts/sublime-cn2tw">
+  <meta name="twitter:title" content="Sublime简体转繁体插件">
+  <meta name="twitter:description" content="多语言常有简体转繁体的需求,所以写了它.基于Web的.离线状态不可用">
+  <meta name="twitter:image" content="/assets/documentation/sample-image.jpg">
+
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link href="/feed.xml" type="application/rss+xml" rel="alternate" title="Aaron Last 10 blog posts" />
+
+  
+    <link type="text/css" rel="stylesheet" href="/assets/light.css">
+  
+</head>
+
+<body>
+  <main role="main">
+    <div class="grid grid-centered">
+      <div class="grid-cell">
+        <nav class="header-nav reveal">
+  <a href="/" class="header-logo" title="Aaron">Aaron</a>
+  <ul class="header-links">
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      <li>
+        <a href="/feed.xml" target="_blank" title="RSS">
+          <span class="icon icon-social-rss"></span>
+        </a>
+      </li>
+    
+  </ul>
+</nav>
+
+        <article class="article reveal">
+          <header class="article-header">
+            <h1>Sublime简体转繁体插件</h1>
+            <p>多语言常有简体转繁体的需求,所以写了它.基于Web的.离线状态不可用</p>
+            <div class="article-list-footer">
+              <span class="article-list-date">
+                March 20, 2017
+              </span>
+              <span class="article-list-divider">-</span>
+              <span class="article-list-minutes">
+                
+                
+                  2 minute read
+                
+              </span>
+              <span class="article-list-divider">-</span>
+              <div class="article-list-tags">
+                
+                  <a href="/tag/Sublime text 3">Sublime text 3</a>
+                
+                  <a href="/tag/Python">Python</a>
+                
+              </div>
+            </div>
+          </header>
+
+          <div class="article-content">
+            <p>多语言常有简体转繁体的需求,每次转都得在Word,或者在线去转,打开浏览器等,有点儿繁琐,基于Web(在线工具tool.lu)的转换.离线状态不可用
+支持多个选区替换,如果离线或接口错误,将不进行转换.下面代码.放入插件Packages目录.</p>
+<h5 id="快捷键示例">快捷键示例:</h5>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">[</span><span class="w">    
+    </span><span class="p">{</span><span class="nt">"keys"</span><span class="p">:[</span><span class="s2">"ctrl+m"</span><span class="p">],</span><span class="w"> </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"transft"</span><span class="p">}</span><span class="w">
+</span><span class="p">]</span></code></pre></figure>
+
+<h5 id="插件代码">插件代码:</h5>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="o">&lt;</span><span class="err">?</span><span class="n">php</span>
+<span class="o">&lt;</span><span class="err">!</span><span class="o">--</span> <span class="n">This</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">comment</span> <span class="o">--&gt;</span>
+<span class="kn">import</span> <span class="nn">sublime</span>
+<span class="kn">import</span> <span class="nn">sublime_plugin</span>
+<span class="kn">import</span> <span class="nn">urllib</span><span class="o">,</span><span class="nn">json</span>
+
+<span class="k">class</span> <span class="nc">transftCommand</span><span class="p">(</span><span class="n">sublime_plugin</span><span class="o">.</span><span class="n">TextCommand</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edit</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">sel</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">r</span><span class="p">:</span>
+            <span class="n">word</span>   <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">substr</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="n">cont</span>   <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getContent</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+            <span class="n">con</span>    <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">cont</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">con</span><span class="p">[</span><span class="s">"status"</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">edit</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">con</span><span class="p">[</span><span class="s">"text"</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">getContent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">"code"</span><span class="p">:</span><span class="n">content</span><span class="p">,</span>
+            <span class="s">"operate"</span><span class="p">:</span><span class="s">"zh-hant"</span>
+        <span class="p">}</span>
+        <span class="n">url</span>  <span class="o">=</span> <span class="s">r"http://tool.lu/zhconvert/ajax.html"</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">'ascii'</span><span class="p">)</span> <span class="c"># data should be bytes</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">req</span><span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">:</span>
+            <span class="n">the_page</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">the_page</span><span class="p">,</span> <span class="s">'utf-8'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">content</span></code></pre></figure>
+
+<p>引用:</p>
+<ul>
+  <li><a href="https://www.oschina.net/translate/sublime-text-plugin-api-reference" target="_blank">Sublime text 2 中文API</a> (Sublime text 3有点儿不一样,可能需要看官网API)</li>
+</ul>
+
+
+          </div>
+
+          <div class="article-share">
+            
+            <a href="" title="Share on Twitter" onclick="window.open('https://twitter.com/home?status=Sublime简体转繁体插件 - /posts/sublime-cn2tw ', 'newwindow', 'width=500, height=225'); return false;">
+              <span class="icon icon-social-twitter"></span>
+            </a>
+            <a href="" title="Share on Facebook" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=/posts/sublime-cn2tw', 'newwindow', 'width=500, height=500'); return false;">
+              <span class="icon icon-social-facebook"></span>
+            </a>
+            <a href="" title="Share on Google+" onclick="window.open('https://plus.google.com/share?url=/posts/sublime-cn2tw', 'newwindow', 'width=550, height=400'); return false;">
+              <span class="icon icon-social-googleplus"></span>
+            </a>
+          </div>
+
+          
+        </article>
+        <footer class="footer reveal">
+  <p>
+    -- 勤于耕,荒于嘻 
+    <a href="/about" title="About me">关于我</a><!-- . Download it <a href="https://github.com/nielsenramon/chalk" target="_blank" title="Download Chalk">here --></a>.
+  </p>
+</footer>
+
+      </div>
+    </div>
+  </main>
+  <script type="text/javascript" src="/assets/vendor.js"></script>
+<script type="text/javascript" src="/assets/application.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Cormorant Garamond:700', 'Lato:300,400,700']
+    }
+  });
+</script>
+
+
+
+</body>
+</html>
