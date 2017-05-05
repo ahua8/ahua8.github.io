@@ -79,14 +79,19 @@
           </header>
 
           <div class="article-content">
-            <p>本文转自：http://blog.csdn.net/liukeforever/article/details/8282401
-方便以后查阅，MARK下。
-需求让Nginx跟据请求的url不同，而转发到不同的server上
+            <p>本文转自：http://blog.csdn.net/liukeforever/article/details/8282401</p>
+
+<p>方便以后查阅，MARK下。</p>
+
+<p>需求让Nginx跟据请求的url不同，而转发到不同的server上
 举例：
-url http://127.0.0.1/json/0769/
-url http://127.0.0.1/json/0734/
-需求把url后缀为0769的请求转发到server1， url 后缀为0734的请求转发到server1
-nginx.conf实现代码</p>
+url http://127.0.0.1/json/0769/</p>
+
+<p>url http://127.0.0.1/json/0734/</p>
+
+<p>需求把url后缀为0769的请求转发到server1， url 后缀为0734的请求转发到server1</p>
+
+<h4 id="nginxconf实现代码">nginx.conf实现代码</h4>
 
 <figure class="highlight"><pre><code class="language-conf" data-lang="conf"><span class="n">worker_processes</span> <span class="m">2</span>;
   

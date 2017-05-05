@@ -79,11 +79,16 @@
           </header>
 
           <div class="article-content">
-            <p>nginx XSendfile 模块直接下载大文件(下载的文件注意格式，不在mime.types;里的是无法下载的)
-http://www.linuxde.net/2013/03/12740.html
-http://www.lvtao.net/config/610.html
-http://www.tuicool.com/articles/RFR3Qj2
-http://www.oschina.net/question/54100_33185</p>
+            <p>nginx XSendfile 模块直接下载大文件(下载的文件注意格式，不在mime.types;里的是无法下载的)</p>
+
+<p>http://www.linuxde.net/2013/03/12740.html</p>
+
+<p>http://www.lvtao.net/config/610.html</p>
+
+<p>http://www.tuicool.com/articles/RFR3Qj2</p>
+
+<p>http://www.oschina.net/question/54100_33185</p>
+
 <h4 id="执行下载的php代码片断">执行下载的PHP代码片断：</h4>
 
 <figure class="highlight"><pre><code class="language-php" data-lang="php">//文件存储路径
@@ -112,16 +117,27 @@ exit;</code></pre></figure>
 
 <h4 id="上传大文件需要修改的配置">上传大文件需要修改的配置：</h4>
 
-<p>1、nginx：
-    client_max_body_size 600M; #客户端提交body数据大小限制</p>
+<p>1、nginx：</p>
 
-<p>2、php.ini
-    upload_max_filesize = 600M #上传文件最大限制
-    post_max_size = 600M #POST表单提交最大数据值
-    max_execution_time = 120 #PHP程序最长执行时间，秒
-    max_input_time = 120 #对post,get,put等方式提交数据的时间限制。
-    max_file_uploads = 20 #最大同时上传文件数量
-    memory_limit=128M #对单个脚本程序最大可使用的内存</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>client_max_body_size 600M; #客户端提交body数据大小限制
+</code></pre>
+</div>
+
+<p>2、php.ini</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>upload_max_filesize = 600M #上传文件最大限制
+
+post_max_size = 600M #POST表单提交最大数据值
+
+max_execution_time = 120 #PHP程序最长执行时间，秒
+
+max_input_time = 120 #对post,get,put等方式提交数据的时间限制。
+
+max_file_uploads = 20 #最大同时上传文件数量
+
+memory_limit=128M #对单个脚本程序最大可使用的内存
+</code></pre>
+</div>
 
           </div>
 
