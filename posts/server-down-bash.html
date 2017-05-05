@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Aaron | 多服务器间下载资源包</title>
+  <meta name="description" content="集群多服务器间下载资源包">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:title" content="多服务器间下载资源包">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="/posts/server-down-bash">
+  <meta property="og:description" content="集群多服务器间下载资源包">
+  <meta property="og:site_name" content="Aaron">
+  <meta property="og:image" content="/assets/documentation/sample-image.jpg">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:url" content="/posts/server-down-bash">
+  <meta name="twitter:title" content="多服务器间下载资源包">
+  <meta name="twitter:description" content="集群多服务器间下载资源包">
+  <meta name="twitter:image" content="/assets/documentation/sample-image.jpg">
+
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link href="/feed.xml" type="application/rss+xml" rel="alternate" title="Aaron Last 10 blog posts" />
+
+  
+    <link type="text/css" rel="stylesheet" href="/assets/light.css">
+  
+</head>
+
+<body>
+  <main role="main">
+    <div class="grid grid-centered">
+      <div class="grid-cell">
+        <nav class="header-nav reveal">
+  <a href="/" class="header-logo" title="Aaron">Aaron</a>
+  <ul class="header-links">
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      <li>
+        <a href="/feed.xml" target="_blank" title="RSS">
+          <span class="icon icon-social-rss"></span>
+        </a>
+      </li>
+    
+  </ul>
+</nav>
+
+        <article class="article reveal">
+          <header class="article-header">
+            <h1>多服务器间下载资源包</h1>
+            <p>集群多服务器间下载资源包</p>
+            <div class="article-list-footer">
+              <span class="article-list-date">
+                May 5, 2017
+              </span>
+              <span class="article-list-divider">-</span>
+              <span class="article-list-minutes">
+                
+                
+                  1 minute read
+                
+              </span>
+              <span class="article-list-divider">-</span>
+              <div class="article-list-tags">
+                
+                  <a href="/tag/bash">bash</a>
+                
+                  <a href="/tag/shell">shell</a>
+                
+              </div>
+            </div>
+          </header>
+
+          <div class="article-content">
+            
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#复制安装源</span>
+<span class="k">function </span>download_src<span class="o">()</span>
+<span class="o">{</span>
+<span class="nb">echo</span> “#######################################################################”
+<span class="nb">echo</span> “# download_src start <span class="c">#”</span>
+<span class="nb">echo</span> “#######################################################################”
+<span class="k">if</span> <span class="o">[</span> ! -e “/root/down/source/tengine-2.1.0.tar.gz” <span class="o">]</span>;<span class="k">then
+</span>mkdir -p /root/down/
+<span class="k">if</span> <span class="o">[</span> ! -e “/usr/local/bin/expect” <span class="o">]</span>;<span class="k">then
+</span><span class="nb">cd</span> /root/down/
+<span class="o">[</span> -s tcl8.4.19-src.tar.gz <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo</span> ‘cmake-2.8.12.tar.gz found’ <span class="o">||</span> wget -c http://nchc.dl.sourceforge.net/project/tcl/Tcl/8.4.19/tcl8.4.19-src.tar.gz
+<span class="o">[</span> -s expect5.45.tar.gz <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo</span> ‘cmake-2.8.12.tar.gz found’ <span class="o">||</span> wget -c http://ncu.dl.sourceforge.net/project/expect/Expect/5.45/expect5.45.tar.gz
+tar zxvf tcl8.4.19-src.tar.gz
+<span class="nb">cd</span> /root/down/tcl8.4.19/unix
+./configure
+make <span class="o">&amp;&amp;</span> make install
+<span class="nb">cd</span> /root/down/
+tar zxvf expect5.45.tar.gz
+<span class="nb">cd</span> /root/down/expect5.45
+./configure –with-tclinclude<span class="o">=</span>/root/down/tcl8.4.19/generic –with-tclconfig<span class="o">=</span>/usr/local/lib/
+make <span class="o">&amp;&amp;</span> make install
+<span class="k">if</span> <span class="o">[</span> ! -e “/usr/local/bin/expect” <span class="o">]</span>;<span class="k">then
+</span><span class="nb">echo</span> “install expect error”
+<span class="nb">exit
+</span><span class="k">fi
+fi
+</span>expect -c ”
+spawn scp -r root@<span class="nv">$source_IP</span>:/root/down/__wbiao_install_source/<span class="k">*</span> /root/down/
+expect <span class="o">{</span>
+<span class="se">\”</span><span class="k">*</span>assword<span class="se">\”</span> <span class="o">{</span><span class="nb">set </span>timeout 300; send <span class="se">\”</span><span class="nv">$source_passwd</span><span class="se">\r\”</span>;<span class="o">}</span>
+<span class="se">\”</span>yes/no<span class="se">\”</span> <span class="o">{</span>send <span class="se">\”</span>yes<span class="se">\r\”</span>; exp_continue;<span class="o">}</span>
+<span class="o">}</span>
+expect eof”
+<span class="nb">cd</span> /root/down/source/
+ls <span class="k">*</span>.tar.gz | xargs -n1 tar xzvf
+ls <span class="k">*</span>.tgz | xargs -n1 tar xzvf
+ls <span class="k">*</span>.zip | xargs -n1 unzip
+<span class="k">fi</span></code></pre></figure>
+
+
+          </div>
+
+          <div class="article-share">
+            
+            <a href="" title="Share on Twitter" onclick="window.open('https://twitter.com/home?status=多服务器间下载资源包 - /posts/server-down-bash ', 'newwindow', 'width=500, height=225'); return false;">
+              <span class="icon icon-social-twitter"></span>
+            </a>
+            <a href="" title="Share on Facebook" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=/posts/server-down-bash', 'newwindow', 'width=500, height=500'); return false;">
+              <span class="icon icon-social-facebook"></span>
+            </a>
+            <a href="" title="Share on Google+" onclick="window.open('https://plus.google.com/share?url=/posts/server-down-bash', 'newwindow', 'width=550, height=400'); return false;">
+              <span class="icon icon-social-googleplus"></span>
+            </a>
+          </div>
+
+          
+        </article>
+        <footer class="footer reveal">
+  <p>
+    -- 勤于耕,荒于嘻 
+    <a href="/about" title="About me">关于我</a><!-- . Download it <a href="https://github.com/nielsenramon/chalk" target="_blank" title="Download Chalk">here --></a>.
+  </p>
+</footer>
+
+      </div>
+    </div>
+  </main>
+  <script type="text/javascript" src="/assets/vendor.js"></script>
+<script type="text/javascript" src="/assets/application.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Cormorant Garamond:700', 'Lato:300,400,700']
+    }
+  });
+</script>
+
+
+
+</body>
+</html>

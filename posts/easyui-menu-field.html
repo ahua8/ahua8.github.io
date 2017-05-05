@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Aaron | Easyui datagrid 表头菜单控制列显示/隐藏列</title>
+  <meta name="description" content="Easyui datagrid 表头菜单控制列显示/隐藏列">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:title" content="Easyui datagrid 表头菜单控制列显示/隐藏列">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="/posts/easyui-menu-field">
+  <meta property="og:description" content="Easyui datagrid 表头菜单控制列显示/隐藏列">
+  <meta property="og:site_name" content="Aaron">
+  <meta property="og:image" content="/assets/documentation/sample-image.jpg">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:url" content="/posts/easyui-menu-field">
+  <meta name="twitter:title" content="Easyui datagrid 表头菜单控制列显示/隐藏列">
+  <meta name="twitter:description" content="Easyui datagrid 表头菜单控制列显示/隐藏列">
+  <meta name="twitter:image" content="/assets/documentation/sample-image.jpg">
+
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link href="/feed.xml" type="application/rss+xml" rel="alternate" title="Aaron Last 10 blog posts" />
+
+  
+    <link type="text/css" rel="stylesheet" href="/assets/light.css">
+  
+</head>
+
+<body>
+  <main role="main">
+    <div class="grid grid-centered">
+      <div class="grid-cell">
+        <nav class="header-nav reveal">
+  <a href="/" class="header-logo" title="Aaron">Aaron</a>
+  <ul class="header-links">
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      <li>
+        <a href="/feed.xml" target="_blank" title="RSS">
+          <span class="icon icon-social-rss"></span>
+        </a>
+      </li>
+    
+  </ul>
+</nav>
+
+        <article class="article reveal">
+          <header class="article-header">
+            <h1>Easyui datagrid 表头菜单控制列显示/隐藏列</h1>
+            <p>Easyui datagrid 表头菜单控制列显示/隐藏列</p>
+            <div class="article-list-footer">
+              <span class="article-list-date">
+                May 5, 2017
+              </span>
+              <span class="article-list-divider">-</span>
+              <span class="article-list-minutes">
+                
+                
+                  4 minute read
+                
+              </span>
+              <span class="article-list-divider">-</span>
+              <div class="article-list-tags">
+                
+                  <a href="/tag/javascript">javascript</a>
+                
+              </div>
+            </div>
+          </header>
+
+          <div class="article-content">
+            <p>项目中一条记录属性比较多，导致横向滚动条都得拖动几屏，不同人对数据的需求不一样。不能直观的从数据中看见想要的字段。冻结列也避免不了滚动条，跟不同人的需求。
+最符合的方案是： datagrid表头上做显示隐藏列功能.</p>
+
+<p><a href="/assets/documentation/easyui_head.jpg" class="fluidbox-trigger">
+  <img src="/assets/documentation/easyui_head.jpg" alt="easyui-header-menu" />
+</a></p>
+
+<p>datagrid提供一个onHeaderContextMenu事件。在鼠标右击DataGrid表格头的时候触发。只需要在这个事件上做点事情。
+easyui menu插件提供菜单功能。</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">headerContextMenu</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">field</span><span class="p">)</span> <span class="p">{</span> 
+    <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nb">window</span><span class="p">.</span><span class="nx">event</span><span class="p">.</span><span class="nx">returnValue</span><span class="o">=</span><span class="kc">false</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">grid</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">);</span> <span class="c1">//headerContextMenu 是被datagrid调用。所以this是当前datagrid</span>
+    <span class="kd">var</span> <span class="nx">headerContextMenu</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">headerContextMenu</span><span class="p">;</span><span class="c1">//datagrid头菜单对象,可能为空</span>
+    <span class="kd">var</span> <span class="nx">okCls</span> <span class="o">=</span> <span class="s1">'tree-checkbox1'</span><span class="p">;</span><span class="c1">//选中,easyui中的checkbox都是用样式处理，而非checkbox本身</span>
+    <span class="kd">var</span> <span class="nx">emptyCls</span> <span class="o">=</span> <span class="s1">'tree-checkbox0'</span><span class="p">;</span><span class="c1">//checkbox 取消的样式</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">headerContextMenu</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">//未生成菜单时，创建菜单</span>
+        <span class="kd">var</span> <span class="nx">tmenu</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">'&lt;div style="width:auto;"&gt;&lt;/div&gt;'</span><span class="p">).</span><span class="nx">appendTo</span><span class="p">(</span><span class="s1">'body'</span><span class="p">);</span> <span class="c1">//menu容器</span>
+        <span class="kd">var</span> <span class="nx">fields</span> <span class="o">=</span> <span class="nx">grid</span><span class="p">.</span><span class="nx">datagrid</span><span class="p">(</span><span class="s1">'getColumnFields'</span><span class="p">);</span> <span class="c1">//获取当前datagrid的列集合</span>
+        <span class="k">for</span> <span class="p">(</span> <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">fields</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span> 
+            <span class="kd">var</span> <span class="nx">fildOption</span> <span class="o">=</span> <span class="nx">grid</span><span class="p">.</span><span class="nx">datagrid</span><span class="p">(</span><span class="s1">'getColumnOption'</span><span class="p">,</span> <span class="nx">fields</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span> 
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">fildOption</span><span class="p">.</span><span class="nx">hidden</span><span class="p">)</span> <span class="p">{</span> 
+                <span class="nx">$</span><span class="p">(</span><span class="s1">'&lt;div iconCls="'</span><span class="o">+</span><span class="nx">okCls</span><span class="o">+</span><span class="s1">'" hideOnClick="false" field="'</span> <span class="o">+</span> <span class="nx">fields</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">+</span> <span class="s1">'"/&gt;'</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="nx">fildOption</span><span class="p">.</span><span class="nx">title</span><span class="p">).</span><span class="nx">appendTo</span><span class="p">(</span><span class="nx">tmenu</span><span class="p">);</span>  <span class="c1">//添加菜单子项,设置field属性与显示名称 hideOnClick="false" 为自定义属性，后面介绍</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> 
+                <span class="nx">$</span><span class="p">(</span><span class="s1">'&lt;div iconCls="'</span><span class="o">+</span><span class="nx">emptyCls</span><span class="o">+</span><span class="s1">'" hideOnClick="false" field="'</span> <span class="o">+</span> <span class="nx">fields</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">+</span> <span class="s1">'"/&gt;'</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="nx">fildOption</span><span class="p">.</span><span class="nx">title</span><span class="p">).</span><span class="nx">appendTo</span><span class="p">(</span><span class="nx">tmenu</span><span class="p">);</span> 
+            <span class="p">}</span> 
+        <span class="p">}</span> 
+        <span class="nx">headerContextMenu</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">headerContextMenu</span> <span class="o">=</span> <span class="nx">tmenu</span><span class="p">.</span><span class="nx">menu</span><span class="p">({</span>
+            <span class="na">onClick</span> <span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">item</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">//菜单子项的click事件，也就是列名</span>
+                <span class="kd">var</span> <span class="nx">field</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'field'</span><span class="p">);</span> 
+                <span class="k">if</span> <span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">iconCls</span> <span class="o">==</span> <span class="nx">okCls</span><span class="p">)</span> <span class="p">{</span> 
+                    <span class="nx">grid</span><span class="p">.</span><span class="nx">datagrid</span><span class="p">(</span><span class="s1">'hideColumn'</span><span class="p">,</span> <span class="nx">field</span><span class="p">);</span>  <span class="c1">//如果是选中状态的,click事件，则隐藏列，并设置当前子项的为未选中状态</span>
+                    <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">menu</span><span class="p">(</span><span class="s1">'setIcon'</span><span class="p">,</span> <span class="p">{</span> 
+                        <span class="na">target</span> <span class="p">:</span> <span class="nx">item</span><span class="p">.</span><span class="nx">target</span><span class="p">,</span> 
+                        <span class="na">iconCls</span> <span class="p">:</span> <span class="nx">emptyCls</span> 
+                    <span class="p">});</span> 
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>  <span class="c1">//如果是未选中状态的,click事件，则显示列，并设置当前子项的为选中状态</span>
+                    <span class="nx">grid</span><span class="p">.</span><span class="nx">datagrid</span><span class="p">(</span><span class="s1">'showColumn'</span><span class="p">,</span> <span class="nx">field</span><span class="p">);</span> 
+                    <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">menu</span><span class="p">(</span><span class="s1">'setIcon'</span><span class="p">,</span> <span class="p">{</span> 
+                        <span class="na">target</span> <span class="p">:</span> <span class="nx">item</span><span class="p">.</span><span class="nx">target</span><span class="p">,</span> 
+                        <span class="na">iconCls</span> <span class="p">:</span> <span class="nx">okCls</span> 
+                    <span class="p">});</span> 
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">});</span> 
+    <span class="p">}</span> 
+    <span class="c1">//菜单显示位置，为鼠标所在页面位置</span>
+    <span class="nx">headerContextMenu</span><span class="p">.</span><span class="nx">menu</span><span class="p">(</span><span class="s1">'show'</span><span class="p">,</span> <span class="p">{</span> 
+        <span class="na">left</span> <span class="p">:</span> <span class="nx">e</span><span class="p">.</span><span class="nx">pageX</span><span class="p">,</span> 
+        <span class="na">top</span> <span class="p">:</span> <span class="nx">e</span><span class="p">.</span><span class="nx">pageY</span> 
+    <span class="p">});</span> 
+<span class="p">};</span></code></pre></figure>
+
+<p>如前面所列出 hideOnClick=”false” 为自定义属性。它的作用在哪？
+easyui的menu插件中，子项的事件绑定中bindMenuItemEvent,click.menu事件，直接隐藏菜单。
+这样会出样一个体验问题，假如我有30例，只需要显示10列时，我每点击一个子项，它都会隐藏一列，并且右键菜单消失，这个会折腾死使用者。重复“右键-隐藏-右键-隐藏”.
+如何去扩展这个属性 hideOnClick.由于这个click事件是在menu内部实现的绑定。只能通过重写jquery.menu.js插件。这个插件源代码在easyui/src上可以找到。
+在createMenu函数中，添加自定义属性。不加在easyui内部将会出现undefined。</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">itemOpts</span> <span class="o">=</span> <span class="nx">$</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span><span class="na">hideOnClick</span><span class="p">:</span><span class="kc">true</span><span class="p">},</span> <span class="nx">$</span><span class="p">.</span><span class="nx">parser</span><span class="p">.</span><span class="nx">parseOptions</span><span class="p">(</span><span class="k">this</span><span class="p">,[</span><span class="s1">'name'</span><span class="p">,</span><span class="s1">'iconCls'</span><span class="p">,</span><span class="s1">'href'</span><span class="p">,{</span><span class="na">separator</span><span class="p">:</span><span class="s1">'boolean'</span><span class="p">}]),</span> <span class="p">{</span>
+                        <span class="na">disabled</span><span class="p">:</span> <span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'disabled'</span><span class="p">)</span> <span class="p">?</span> <span class="kc">true</span> <span class="p">:</span> <span class="kc">undefined</span><span class="p">)</span>
+                    <span class="p">});</span>
+<span class="c1">//改为下面几行</span>
+<span class="kd">var</span> <span class="nx">itemOpts</span> <span class="o">=</span> <span class="nx">$</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span><span class="na">hideOnClick</span><span class="p">:</span><span class="kc">true</span><span class="p">},</span> <span class="nx">$</span><span class="p">.</span><span class="nx">parser</span><span class="p">.</span><span class="nx">parseOptions</span><span class="p">(</span><span class="k">this</span><span class="p">,[</span><span class="s1">'name'</span><span class="p">,</span><span class="s1">'iconCls'</span><span class="p">,</span><span class="s1">'href'</span><span class="p">,{</span><span class="na">separator</span><span class="p">:</span><span class="s1">'boolean'</span><span class="p">},{</span><span class="na">hideOnClick</span><span class="p">:</span><span class="s1">'boolean'</span><span class="p">}]),</span> <span class="p">{</span>
+                        <span class="na">disabled</span><span class="p">:</span> <span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'disabled'</span><span class="p">)</span> <span class="p">?</span> <span class="kc">true</span> <span class="p">:</span> <span class="kc">undefined</span><span class="p">)</span>
+                    <span class="p">});</span></code></pre></figure>
+
+<p>接下来，将属性绑定到具体的子项上，以便子项调用click事件，判断hideOnClick的值</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">item</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">itemHref</span> <span class="o">=</span> <span class="nx">itemOpts</span><span class="p">.</span><span class="nx">href</span> <span class="o">||</span> <span class="s1">''</span><span class="p">;</span>
+
+<span class="c1">//上条下面添加以下语句，默认hideOnClick为true;</span>
+
+<span class="nx">item</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">hideOnClick</span> <span class="o">=</span> <span class="p">(</span><span class="nx">itemOpts</span><span class="p">.</span><span class="nx">hideOnClick</span> <span class="o">==</span> <span class="kc">undefined</span> <span class="o">||</span> <span class="nx">itemOpts</span><span class="p">.</span><span class="nx">hideOnClick</span> <span class="o">==</span> <span class="kc">null</span> <span class="p">?</span> <span class="kc">true</span> <span class="p">:</span> <span class="o">!!</span><span class="nx">itemOpts</span><span class="p">.</span><span class="nx">hideOnClick</span><span class="p">);</span></code></pre></figure>
+
+<p>接下来在子项事件绑定(bindMenuItemEvent)过程中的click.menu事件中处理</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="c1">//将原有的</span>
+<span class="nx">hideAll</span><span class="p">(</span><span class="nx">target</span><span class="p">,</span> <span class="nx">$</span><span class="p">(</span><span class="nx">target</span><span class="p">).</span><span class="nx">hasClass</span><span class="p">(</span><span class="s1">'menu-inline'</span><span class="p">));</span>
+
+<span class="c1">//添加判断，hideOnClick为false时，不执行上面语句，也就是隐藏整个菜单。</span>
+
+<span class="k">if</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">hideOnClick</span><span class="p">){</span>
+    <span class="nx">hideAll</span><span class="p">(</span><span class="nx">target</span><span class="p">,</span> <span class="nx">$</span><span class="p">(</span><span class="nx">target</span><span class="p">).</span><span class="nx">hasClass</span><span class="p">(</span><span class="s1">'menu-inline'</span><span class="p">));</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>己经处理完批,如何调用？
+如果是所有的datagrid都通用这种功能可以使用:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">$</span><span class="p">.</span><span class="nx">fn</span><span class="p">.</span><span class="nx">datagrid</span><span class="p">.</span><span class="nx">defaults</span><span class="p">.</span><span class="nx">onHeaderContextMenu</span> <span class="o">=</span> <span class="nx">headerContextMenu</span><span class="p">;</span></code></pre></figure>
+
+<p>如果只是部分使用，刚需要在具体的datagrid中data-options中使用</p>
+
+<p>onHeaderContextMenu:headerContextMenu</p>
+
+<p>或者是 js中的</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">$</span><span class="p">(</span><span class="s1">'#datagrid'</span><span class="p">).</span><span class="nx">datagrid</span><span class="p">({</span>
+    <span class="c1">//...,</span>
+    <span class="s1">'onHeaderContextMenu'</span><span class="p">:</span><span class="nx">headerContextMenu</span>
+    <span class="c1">//...,</span>
+<span class="p">});</span></code></pre></figure>
+
+
+          </div>
+
+          <div class="article-share">
+            
+            <a href="" title="Share on Twitter" onclick="window.open('https://twitter.com/home?status=Easyui datagrid 表头菜单控制列显示/隐藏列 - /posts/easyui-menu-field ', 'newwindow', 'width=500, height=225'); return false;">
+              <span class="icon icon-social-twitter"></span>
+            </a>
+            <a href="" title="Share on Facebook" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=/posts/easyui-menu-field', 'newwindow', 'width=500, height=500'); return false;">
+              <span class="icon icon-social-facebook"></span>
+            </a>
+            <a href="" title="Share on Google+" onclick="window.open('https://plus.google.com/share?url=/posts/easyui-menu-field', 'newwindow', 'width=550, height=400'); return false;">
+              <span class="icon icon-social-googleplus"></span>
+            </a>
+          </div>
+
+          
+        </article>
+        <footer class="footer reveal">
+  <p>
+    -- 勤于耕,荒于嘻 
+    <a href="/about" title="About me">关于我</a><!-- . Download it <a href="https://github.com/nielsenramon/chalk" target="_blank" title="Download Chalk">here --></a>.
+  </p>
+</footer>
+
+      </div>
+    </div>
+  </main>
+  <script type="text/javascript" src="/assets/vendor.js"></script>
+<script type="text/javascript" src="/assets/application.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Cormorant Garamond:700', 'Lato:300,400,700']
+    }
+  });
+</script>
+
+
+
+</body>
+</html>

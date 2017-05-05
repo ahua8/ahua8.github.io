@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Aaron | MYSQL视图与事件</title>
+  <meta name="description" content="事件类似于调度,按Mysql中的计时器来定时执行特定SQL,视图一指SQL语句的虚拟表">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:title" content="MYSQL视图与事件">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="/posts/msyql-event-view">
+  <meta property="og:description" content="事件类似于调度,按Mysql中的计时器来定时执行特定SQL,视图一指SQL语句的虚拟表">
+  <meta property="og:site_name" content="Aaron">
+  <meta property="og:image" content="/assets/documentation/sample-image.jpg">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:url" content="/posts/msyql-event-view">
+  <meta name="twitter:title" content="MYSQL视图与事件">
+  <meta name="twitter:description" content="事件类似于调度,按Mysql中的计时器来定时执行特定SQL,视图一指SQL语句的虚拟表">
+  <meta name="twitter:image" content="/assets/documentation/sample-image.jpg">
+
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link href="/feed.xml" type="application/rss+xml" rel="alternate" title="Aaron Last 10 blog posts" />
+
+  
+    <link type="text/css" rel="stylesheet" href="/assets/light.css">
+  
+</head>
+
+<body>
+  <main role="main">
+    <div class="grid grid-centered">
+      <div class="grid-cell">
+        <nav class="header-nav reveal">
+  <a href="/" class="header-logo" title="Aaron">Aaron</a>
+  <ul class="header-links">
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      <li>
+        <a href="/feed.xml" target="_blank" title="RSS">
+          <span class="icon icon-social-rss"></span>
+        </a>
+      </li>
+    
+  </ul>
+</nav>
+
+        <article class="article reveal">
+          <header class="article-header">
+            <h1>MYSQL视图与事件</h1>
+            <p>事件类似于调度,按Mysql中的计时器来定时执行特定SQL,视图一指SQL语句的虚拟表</p>
+            <div class="article-list-footer">
+              <span class="article-list-date">
+                May 5, 2017
+              </span>
+              <span class="article-list-divider">-</span>
+              <span class="article-list-minutes">
+                
+                
+                  5 minute read
+                
+              </span>
+              <span class="article-list-divider">-</span>
+              <div class="article-list-tags">
+                
+                  <a href="/tag/Sublime text 3">Sublime text 3</a>
+                
+                  <a href="/tag/Python">Python</a>
+                
+              </div>
+            </div>
+          </header>
+
+          <div class="article-content">
+            <p>首先准备几张非常简单数据表。</p>
+
+<figure class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="c1">-- 订单表</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="nv">`order`</span> <span class="p">(</span>
+  <span class="nv">`order_id`</span> <span class="n">int</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span> <span class="n">unsigned</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="n">AUTO_INCREMENT</span><span class="p">,</span>
+  <span class="nv">`order_money`</span> <span class="n">decimal</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="n">unsigned</span> <span class="k">DEFAULT</span> <span class="s1">'0.00'</span><span class="p">,</span>
+  <span class="nv">`user_name`</span> <span class="n">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="k">DEFAULT</span> <span class="s1">''</span><span class="p">,</span>
+  <span class="nv">`status`</span> <span class="n">int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="k">DEFAULT</span> <span class="s1">'0'</span><span class="p">,</span>
+  <span class="nv">`add_time`</span> <span class="n">int</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span> <span class="k">DEFAULT</span> <span class="s1">'0'</span><span class="p">,</span>
+  <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="nv">`order_id`</span><span class="p">)</span>
+<span class="p">)</span> <span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span> <span class="k">DEFAULT</span> <span class="n">CHARSET</span><span class="o">=</span><span class="n">latin1</span>
+ 
+<span class="c1">-- 库存表</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="nv">`stock`</span> <span class="p">(</span>
+  <span class="nv">`id`</span> <span class="n">int</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="n">AUTO_INCREMENT</span><span class="p">,</span>
+  <span class="nv">`goods_id`</span> <span class="n">int</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>               <span class="c1">-- 商品ID</span>
+  <span class="nv">`real_stock`</span> <span class="n">int</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span> <span class="s1">'0'</span><span class="p">,</span> <span class="c1">-- 实际库存</span>
+  <span class="nv">`wait_count`</span> <span class="n">int</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span> <span class="s1">'0'</span><span class="p">,</span> <span class="c1">-- 库存占用</span>
+  <span class="nv">`warehouse_id`</span> <span class="n">int</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span> <span class="s1">'0'</span><span class="p">,</span> <span class="c1">-- 仓库ID</span>
+  <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="nv">`id`</span><span class="p">)</span>
+<span class="p">)</span> <span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span> <span class="k">DEFAULT</span> <span class="n">CHARSET</span><span class="o">=</span><span class="n">latin1</span>
+ 
+<span class="c1">-- 添加订单演示数据</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="nv">`order`</span><span class="p">(</span><span class="n">order_money</span><span class="p">,</span><span class="n">user_name</span><span class="p">,</span><span class="nv">`status`</span><span class="p">,</span><span class="n">add_time</span><span class="p">)</span> <span class="k">VALUES</span>
+<span class="p">(</span><span class="s1">'99.9'</span><span class="p">,</span><span class="s1">'zhangshan'</span><span class="p">,</span><span class="s1">'1'</span><span class="p">,</span><span class="n">UNIX_TIMESTAMP</span><span class="p">(</span><span class="s1">'2014-11-04 12:23:00'</span><span class="p">)),</span>
+<span class="p">(</span><span class="s1">'199.9'</span><span class="p">,</span><span class="s1">'lishi'</span><span class="p">,</span><span class="s1">'1'</span><span class="p">,</span><span class="n">UNIX_TIMESTAMP</span><span class="p">(</span><span class="s1">'2014-11-12 11:23:00'</span><span class="p">)),</span>
+<span class="p">(</span><span class="s1">'299.9'</span><span class="p">,</span><span class="s1">'zhangshan'</span><span class="p">,</span><span class="s1">'1'</span><span class="p">,</span><span class="n">UNIX_TIMESTAMP</span><span class="p">(</span><span class="s1">'2015-04-01 12:23:00'</span><span class="p">)),</span>
+<span class="p">(</span><span class="s1">'399.9'</span><span class="p">,</span><span class="s1">'wangwu'</span><span class="p">,</span><span class="s1">'1'</span><span class="p">,</span><span class="n">UNIX_TIMESTAMP</span><span class="p">(</span><span class="s1">'2015-04-04 12:23:00'</span><span class="p">)),</span>
+<span class="p">(</span><span class="s1">'499.9'</span><span class="p">,</span><span class="s1">'zhaoliu'</span><span class="p">,</span><span class="s1">'1'</span><span class="p">,</span><span class="n">UNIX_TIMESTAMP</span><span class="p">(</span><span class="s1">'2016-01-04 12:23:00'</span><span class="p">)),</span>
+<span class="p">(</span><span class="s1">'599.9'</span><span class="p">,</span><span class="s1">'sunqi'</span><span class="p">,</span><span class="s1">'1'</span><span class="p">,</span><span class="n">UNIX_TIMESTAMP</span><span class="p">(</span><span class="s1">'2016-07-01 12:23:00'</span><span class="p">)),</span>
+<span class="p">(</span><span class="s1">'599.9'</span><span class="p">,</span><span class="s1">'sunqi'</span><span class="p">,</span><span class="s1">'1'</span><span class="p">,</span><span class="n">UNIX_TIMESTAMP</span><span class="p">(</span><span class="s1">'2016-07-12 12:23:00'</span><span class="p">))</span>
+
+<span class="c1">-- 添加库存演示数据</span>
+<span class="c1">-- 在stock中添加两个商品的4条库存信息。</span>
+<span class="c1">-- goods_id:1000 与 goods_id:1001</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">stock</span><span class="p">(</span><span class="n">goods_id</span><span class="p">,</span><span class="n">real_stock</span><span class="p">,</span><span class="n">wait_count</span><span class="p">,</span><span class="n">warehouse_id</span><span class="p">)</span> <span class="k">VALUES</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">),(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),(</span><span class="mi">1001</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">),(</span><span class="mi">1001</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span></code></pre></figure>
+
+<p>视图是怎么样的存在？
+在Sqlyog工具中查看显示</p>
+
+<p>在命令行中show tables查看时，可以查看到
+mysql&gt; show tables;
++—————-+
+| Tables_in_test |
++—————-+
+| order          |
+| stock          |
+| stock_total    |
++—————-+
+3 rows in set (0.00 sec)</p>
+
+<p>如果实时查询商品的有效库存信息，我们可能需要基于stock写:</p>
+
+<figure class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="k">select</span> <span class="n">goods_id</span><span class="p">,(</span><span class="k">SUM</span><span class="p">(</span><span class="n">real_stock</span><span class="p">)</span><span class="o">-</span><span class="k">SUM</span><span class="p">(</span><span class="n">wait_count</span><span class="p">))</span> <span class="k">as</span> <span class="n">real_stock</span> <span class="k">from</span> <span class="n">stock</span> <span class="k">where</span> <span class="n">goods_id</span><span class="o">=?</span> <span class="k">group</span> <span class="k">by</span> <span class="n">goods_id</span><span class="p">;</span></code></pre></figure>
+
+<p>这只是一个演示，可能更为复杂的可能是需要按照一个商品查询出商品的库存，采购，物流信息。
+那视图中去做这个PHP查询的事件。</p>
+
+<figure class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="k">CREATE</span> <span class="n">ALGORITHM</span><span class="o">=</span><span class="n">UNDEFINED</span> <span class="k">DEFINER</span><span class="o">=</span><span class="nv">`root`</span><span class="o">@</span><span class="nv">`localhost`</span> <span class="k">SQL</span> <span class="k">SECURITY</span> <span class="k">DEFINER</span> <span class="k">VIEW</span> <span class="nv">`stock_total`</span> <span class="k">AS</span> <span class="p">(</span><span class="k">select</span> <span class="nv">`stock`</span><span class="p">.</span><span class="nv">`goods_id`</span> <span class="k">AS</span> <span class="nv">`goods_id`</span><span class="p">,</span><span class="k">sum</span><span class="p">(</span><span class="nv">`stock`</span><span class="p">.</span><span class="nv">`real_stock`</span><span class="p">)</span> <span class="k">AS</span> <span class="nv">`real_stock`</span><span class="p">,</span><span class="k">sum</span><span class="p">(</span><span class="nv">`stock`</span><span class="p">.</span><span class="nv">`wait_count`</span><span class="p">)</span> <span class="k">AS</span> <span class="nv">`wait_count`</span> <span class="k">from</span> <span class="nv">`stock`</span> <span class="k">group</span> <span class="k">by</span> <span class="nv">`stock`</span><span class="p">.</span><span class="nv">`goods_id`</span><span class="p">)</span></code></pre></figure>
+
+<p>那在PHP中去查询是只需要查询</p>
+
+<figure class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="k">select</span> <span class="n">goods_id</span><span class="p">,</span><span class="n">real_stock</span> <span class="k">from</span> <span class="n">stock</span> <span class="k">where</span> <span class="n">goods_id</span><span class="o">=?</span></code></pre></figure>
+
+<p>写一些简单的查询。而实际上view是一张虚表，并没有做实际的存储
+打开stock_toal的存储文件stock_total.frm是下面内容。而order,与stock用文本打开是二进制文件.</p>
+
+<figure class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="k">TYPE</span><span class="o">=</span><span class="k">VIEW</span>
+<span class="n">query</span><span class="o">=</span><span class="p">(</span><span class="k">select</span> <span class="nv">`test`</span><span class="p">.</span><span class="nv">`stock`</span><span class="p">.</span><span class="nv">`goods_id`</span> <span class="k">AS</span> <span class="nv">`goods_id`</span><span class="p">,</span><span class="k">sum</span><span class="p">(</span><span class="nv">`test`</span><span class="p">.</span><span class="nv">`stock`</span><span class="p">.</span><span class="nv">`real_stock`</span><span class="p">)</span> <span class="k">AS</span> <span class="nv">`real_stock`</span><span class="p">,</span><span class="k">sum</span><span class="p">(</span><span class="nv">`test`</span><span class="p">.</span><span class="nv">`stock`</span><span class="p">.</span><span class="nv">`wait_count`</span><span class="p">)</span> <span class="k">AS</span> <span class="nv">`wait_count`</span> <span class="k">from</span> <span class="nv">`test`</span><span class="p">.</span><span class="nv">`stock`</span> <span class="k">group</span> <span class="k">by</span> <span class="nv">`test`</span><span class="p">.</span><span class="nv">`stock`</span><span class="p">.</span><span class="nv">`goods_id`</span><span class="p">)</span>
+<span class="n">md5</span><span class="o">=</span><span class="mi">784</span><span class="n">eed86ea6afae45962ed032d89d1cb</span>
+<span class="n">updatable</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">algorithm</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">definer_user</span><span class="o">=</span><span class="n">root</span>
+<span class="n">definer_host</span><span class="o">=</span><span class="n">localhost</span>
+<span class="n">suid</span><span class="o">=</span><span class="mi">2</span>
+<span class="n">with_check_option</span><span class="o">=</span><span class="mi">0</span>
+<span class="k">timestamp</span><span class="o">=</span><span class="mi">2016</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">30</span> <span class="mi">06</span><span class="p">:</span><span class="mi">24</span><span class="p">:</span><span class="mi">51</span>
+<span class="k">create</span><span class="o">-</span><span class="k">version</span><span class="o">=</span><span class="mi">1</span>
+<span class="k">source</span><span class="o">=</span><span class="p">(</span><span class="k">SELECT</span> <span class="n">goods_id</span><span class="p">,</span><span class="k">SUM</span><span class="p">(</span><span class="n">real_stock</span><span class="p">)</span> <span class="k">as</span> <span class="n">real_stock</span><span class="p">,</span><span class="k">SUM</span><span class="p">(</span><span class="n">wait_count</span><span class="p">)</span> <span class="k">as</span> <span class="n">wait_count</span> <span class="k">FROM</span> <span class="n">stock</span> <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">goods_id</span><span class="p">)</span>
+<span class="n">client_cs_name</span><span class="o">=</span><span class="n">utf8</span>
+<span class="n">connection_cl_name</span><span class="o">=</span><span class="n">utf8_general_ci</span>
+<span class="n">view_body_utf8</span><span class="o">=</span><span class="p">(</span><span class="k">select</span> <span class="nv">`test`</span><span class="p">.</span><span class="nv">`stock`</span><span class="p">.</span><span class="nv">`goods_id`</span> <span class="k">AS</span> <span class="nv">`goods_id`</span><span class="p">,</span><span class="k">sum</span><span class="p">(</span><span class="nv">`test`</span><span class="p">.</span><span class="nv">`stock`</span><span class="p">.</span><span class="nv">`real_stock`</span><span class="p">)</span> <span class="k">AS</span> <span class="nv">`real_stock`</span><span class="p">,</span><span class="k">sum</span><span class="p">(</span><span class="nv">`test`</span><span class="p">.</span><span class="nv">`stock`</span><span class="p">.</span><span class="nv">`wait_count`</span><span class="p">)</span> <span class="k">AS</span> <span class="nv">`wait_count`</span> <span class="k">from</span> <span class="nv">`test`</span><span class="p">.</span><span class="nv">`stock`</span> <span class="k">group</span> <span class="k">by</span> <span class="nv">`test`</span><span class="p">.</span><span class="nv">`stock`</span><span class="p">.</span><span class="nv">`goods_id`</span><span class="p">)</span></code></pre></figure>
+
+<p>视图作用，可能是在视图中通过复杂的SQL。将结果以简单的业务层面数据承现。
+MYSQL事件有点儿LINUX的crond计划任何。
+MYSQL默认是关闭事件的。需要通过以下方式启动.</p>
+
+<figure class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="k">SET</span> <span class="k">GLOBAL</span> <span class="n">event_scheduler</span> <span class="o">=</span> <span class="k">ON</span><span class="p">;</span>
+<span class="k">SET</span> <span class="o">@@</span><span class="k">global</span><span class="p">.</span><span class="n">event_scheduler</span> <span class="o">=</span> <span class="k">ON</span><span class="p">;</span>
+<span class="k">SET</span> <span class="k">GLOBAL</span> <span class="n">event_scheduler</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="k">SET</span> <span class="o">@@</span><span class="k">global</span><span class="p">.</span><span class="n">event_scheduler</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span></code></pre></figure>
+
+<p>相反则是关闭，这些都是临时的，下次启动时MYSQL,事件会关闭。所以需要启动时，也开启事件
+也可以直接在启动命令加上“–event_scheduler=1”，例如：
+mysqld … –event_scheduler=1
+my.ini or my.cnf 中的
+[mysqld]
+添加 event_scheduler=ON
+MYSQL事件可以到秒级，cron只到分。
+如果有MYSQL GUI工具，则很好创建，</p>
+
+<figure class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="k">DELIMITER</span> <span class="err">$$</span>
+ 
+<span class="c1">-- SET GLOBAL event_scheduler = ON$$     -- required for event to execute but not create   </span>
+ 
+<span class="k">CREATE</span>  <span class="p">[</span><span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span><span class="p">]</span> <span class="n">EVENT</span> <span class="nv">`grgsms_new`</span><span class="p">.</span><span class="nv">`evt_inventory_statistic`</span>
+ 
+<span class="k">ON</span> <span class="n">SCHEDULE</span> <span class="k">EVERY</span> <span class="mi">1</span> <span class="k">MONTH</span> <span class="n">STARTS</span> <span class="s1">'2016-06-29 12:00:00'</span> <span class="c1">--从6.29 12点开始，每月执行一次。</span>
+     <span class="cm">/* uncomment the example below you want to use */</span>
+ 
+    <span class="c1">-- scheduleexample 1: run once</span>
+        <span class="c1">-- 固定时间执行一次</span>
+       <span class="c1">--  AT 'YYYY-MM-DD HH:MM.SS'/CURRENT_TIMESTAMP { + INTERVAL 1 [HOUR|MONTH|WEEK|DAY|MINUTE|...] }</span>
+ 
+    <span class="c1">-- scheduleexample 2: run at intervals forever after creation</span>
+          <span class="c1">-- 循环执行</span>
+       <span class="c1">-- EVERY 1 [HOUR|MONTH|WEEK|DAY|MINUTE|...]</span>
+ 
+    <span class="c1">-- scheduleexample 3: specified start time, end time and interval for execution</span>
+       <span class="cm">/*EVERY 1  [HOUR|MONTH|WEEK|DAY|MINUTE|...]
+        -- 开始时间
+       STARTS CURRENT_TIMESTAMP/'YYYY-MM-DD HH:MM.SS' { + INTERVAL 1[HOUR|MONTH|WEEK|DAY|MINUTE|...] }
+        -- 可以设定在某一个时间停止。
+       ENDS CURRENT_TIMESTAMP/'YYYY-MM-DD HH:MM.SS' { + INTERVAL 1 [HOUR|MONTH|WEEK|DAY|MINUTE|...] } */</span>
+ 
+<span class="cm">/*[ON COMPLETION [NOT] PRESERVE]
+[ENABLE | DISABLE]
+[COMMENT 'comment']*/</span>
+<span class="k">DO</span>
+    <span class="k">BEGIN</span>
+        <span class="c1">--每月统计订单的总金额，单数，平均每单价</span>
+        <span class="k">insert</span> <span class="k">into</span> <span class="n">total_order</span><span class="p">(</span><span class="nv">`date`</span><span class="p">,</span><span class="n">money</span><span class="p">,</span><span class="n">numbers</span><span class="p">,</span><span class="k">avg</span><span class="p">)</span> <span class="k">SELECT</span> <span class="n">FROM_UNIXTIME</span><span class="p">(</span><span class="n">add_time</span><span class="p">,</span><span class="s1">'%Y%m'</span><span class="p">),</span><span class="k">SUM</span><span class="p">(</span><span class="n">order_money</span><span class="p">),</span><span class="k">COUNT</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="k">SUM</span><span class="p">(</span><span class="n">order_money</span><span class="p">)</span><span class="o">/</span><span class="k">COUNT</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="k">FROM</span> <span class="nv">`order`</span> <span class="k">WHERE</span> <span class="n">STATUS</span><span class="o">=</span><span class="mi">1</span> <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">FROM_UNIXTIME</span><span class="p">(</span><span class="n">add_time</span><span class="p">,</span><span class="s1">'%Y%m'</span><span class="p">);</span>
+    <span class="k">END</span><span class="err">$$</span>
+ 
+<span class="k">DELIMITER</span> <span class="p">;</span></code></pre></figure>
+
+<p>坑，可能是因为MYSQL的计时器原因，可能会出现，MYSQL自动重启或者异常后。导致数据计时不准确。这个跟cron一样。如果linux down机 cron也全部执行失败
+事件开启与关闭：</p>
+
+<figure class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="c1">-- 开启某事件：</span>
+<span class="k">ALTER</span> <span class="n">EVENT</span> <span class="n">e_test</span> <span class="k">ON</span> <span class="k">COMPLETION</span> <span class="k">PRESERVE</span> <span class="n">ENABLE</span><span class="p">;</span>
+<span class="c1">-- 关闭某事件：</span>
+<span class="k">ALTER</span> <span class="n">EVENT</span> <span class="n">e_test</span> <span class="k">ON</span> <span class="k">COMPLETION</span> <span class="k">PRESERVE</span> <span class="n">DISABLE</span><span class="p">;</span></code></pre></figure>
+
+<p>下面这段没测试过，在查看资料时，顺便记录
+对于我们线上环境来说，使用event时，注意在主库上开启定时器，从库上关闭定时器，event触发所有操作均会记录binlog进行主从同步，从
+库上开启定时器很可能造成卡库。切换主库后之后记得将新主库上的定时器打开。</p>
+
+          </div>
+
+          <div class="article-share">
+            
+            <a href="" title="Share on Twitter" onclick="window.open('https://twitter.com/home?status=MYSQL视图与事件 - /posts/msyql-event-view ', 'newwindow', 'width=500, height=225'); return false;">
+              <span class="icon icon-social-twitter"></span>
+            </a>
+            <a href="" title="Share on Facebook" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=/posts/msyql-event-view', 'newwindow', 'width=500, height=500'); return false;">
+              <span class="icon icon-social-facebook"></span>
+            </a>
+            <a href="" title="Share on Google+" onclick="window.open('https://plus.google.com/share?url=/posts/msyql-event-view', 'newwindow', 'width=550, height=400'); return false;">
+              <span class="icon icon-social-googleplus"></span>
+            </a>
+          </div>
+
+          
+        </article>
+        <footer class="footer reveal">
+  <p>
+    -- 勤于耕,荒于嘻 
+    <a href="/about" title="About me">关于我</a><!-- . Download it <a href="https://github.com/nielsenramon/chalk" target="_blank" title="Download Chalk">here --></a>.
+  </p>
+</footer>
+
+      </div>
+    </div>
+  </main>
+  <script type="text/javascript" src="/assets/vendor.js"></script>
+<script type="text/javascript" src="/assets/application.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Cormorant Garamond:700', 'Lato:300,400,700']
+    }
+  });
+</script>
+
+
+
+</body>
+</html>

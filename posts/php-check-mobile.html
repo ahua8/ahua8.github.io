@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Aaron | 检测客户终端是否是移动设备</title>
+  <meta name="description" content="PHP">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:title" content="检测客户终端是否是移动设备">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="/posts/php-check-mobile">
+  <meta property="og:description" content="PHP">
+  <meta property="og:site_name" content="Aaron">
+  <meta property="og:image" content="/assets/documentation/sample-image.jpg">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:url" content="/posts/php-check-mobile">
+  <meta name="twitter:title" content="检测客户终端是否是移动设备">
+  <meta name="twitter:description" content="PHP">
+  <meta name="twitter:image" content="/assets/documentation/sample-image.jpg">
+
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link href="/feed.xml" type="application/rss+xml" rel="alternate" title="Aaron Last 10 blog posts" />
+
+  
+    <link type="text/css" rel="stylesheet" href="/assets/light.css">
+  
+</head>
+
+<body>
+  <main role="main">
+    <div class="grid grid-centered">
+      <div class="grid-cell">
+        <nav class="header-nav reveal">
+  <a href="/" class="header-logo" title="Aaron">Aaron</a>
+  <ul class="header-links">
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      <li>
+        <a href="/feed.xml" target="_blank" title="RSS">
+          <span class="icon icon-social-rss"></span>
+        </a>
+      </li>
+    
+  </ul>
+</nav>
+
+        <article class="article reveal">
+          <header class="article-header">
+            <h1>检测客户终端是否是移动设备</h1>
+            <p>PHP</p>
+            <div class="article-list-footer">
+              <span class="article-list-date">
+                May 5, 2017
+              </span>
+              <span class="article-list-divider">-</span>
+              <span class="article-list-minutes">
+                
+                
+                  1 minute read
+                
+              </span>
+              <span class="article-list-divider">-</span>
+              <div class="article-list-tags">
+                
+                  <a href="/tag/PHP">PHP</a>
+                
+              </div>
+            </div>
+          </header>
+
+          <div class="article-content">
+            
+<figure class="highlight"><pre><code class="language-php" data-lang="php">/**
+* 检测客户终端是否是移动设备
+*/
+function is_mobile_device()
+{
+    // 如果有HTTP_X_WAP_PROFILE则一定是移动设备
+    if (isset($_SERVER['HTTP_X_WAP_PROFILE']))
+    {
+        return true;
+    }
+    // 如果via信息含有wap则一定是移动设备,部分服务商会屏蔽该信息
+    if (isset($_SERVER['HTTP_VIA']))
+    {
+        // 找不到为flase,否则为true
+        return stristr($_SERVER['HTTP_VIA'], "wap") ? true : false;
+    }
+    // 脑残法，判断手机发送的客户端标志,兼容性有待提高
+    if (isset($_SERVER['HTTP_USER_AGENT']))
+    {
+        $clientkeywords = array(
+        'nokia', 'sony', 'ericsson', 'mot', 'samsung', 'htc',
+        'sgh', 'lg', 'sharp', 'sie-', 'philips', 'panasonic', 'alcatel', 'lenovo',
+        'iphone', 'ipod', 'blackberry', 'meizu', 'android', 'netfront', 'symbian', 'ucweb', 'windowsce',
+        'palm', 'operamini', 'operamobi', 'openwave', 'nexusone', 'cldc', 'midp', 'wap', 'mobile',
+        );
+        // 从HTTP_USER_AGENT中查找手机浏览器的关键字
+        if (preg_match("/(" . implode('|', $clientkeywords) . ")/i", strtolower($_SERVER['HTTP_USER_AGENT'])))
+        {
+            return true;
+        }
+    }
+    // 协议法，因为有可能不准确，放到最后判断
+    if (isset ($_SERVER['HTTP_ACCEPT']))
+    {
+        // 如果只支持wml并且不支持html那一定是移动设备
+        // 如果支持wml和html但是wml在html之前则是移动设备
+        if ((strpos($_SERVER['HTTP_ACCEPT'], 'vnd.wap.wml') !== false) <span class="err">&amp;&amp;</span> (strpos($_SERVER['HTTP_ACCEPT'], 'text/html') === false
+        || (strpos($_SERVER['HTTP_ACCEPT'], 'vnd.wap.wml') <span class="nt">&lt; strpos</span><span class="err">($</span><span class="na">_SERVER</span><span class="err">['</span><span class="na">HTTP_ACCEPT</span><span class="err">'],</span> <span class="err">'</span><span class="na">text</span><span class="err">/</span><span class="na">html</span><span class="err">'))))</span>
+        <span class="err">{</span>
+            <span class="na">return</span> <span class="na">true</span><span class="err">;</span>
+        <span class="err">}</span>
+    <span class="err">}</span>
+    <span class="na">return</span> <span class="na">false</span><span class="err">;</span>
+<span class="err">}</span></code></pre></figure>
+
+          </div>
+
+          <div class="article-share">
+            
+            <a href="" title="Share on Twitter" onclick="window.open('https://twitter.com/home?status=检测客户终端是否是移动设备 - /posts/php-check-mobile ', 'newwindow', 'width=500, height=225'); return false;">
+              <span class="icon icon-social-twitter"></span>
+            </a>
+            <a href="" title="Share on Facebook" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=/posts/php-check-mobile', 'newwindow', 'width=500, height=500'); return false;">
+              <span class="icon icon-social-facebook"></span>
+            </a>
+            <a href="" title="Share on Google+" onclick="window.open('https://plus.google.com/share?url=/posts/php-check-mobile', 'newwindow', 'width=550, height=400'); return false;">
+              <span class="icon icon-social-googleplus"></span>
+            </a>
+          </div>
+
+          
+        </article>
+        <footer class="footer reveal">
+  <p>
+    -- 勤于耕,荒于嘻 
+    <a href="/about" title="About me">关于我</a><!-- . Download it <a href="https://github.com/nielsenramon/chalk" target="_blank" title="Download Chalk">here --></a>.
+  </p>
+</footer>
+
+      </div>
+    </div>
+  </main>
+  <script type="text/javascript" src="/assets/vendor.js"></script>
+<script type="text/javascript" src="/assets/application.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Cormorant Garamond:700', 'Lato:300,400,700']
+    }
+  });
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Aaron | http_image_filter_module模块,根据URL生成不同尺寸的图片</title>
+  <meta name="description" content="http_image_filter_module模块,根据URL生成不同尺寸的图片">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:title" content="http_image_filter_module模块,根据URL生成不同尺寸的图片">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="/posts/nginx-image">
+  <meta property="og:description" content="http_image_filter_module模块,根据URL生成不同尺寸的图片">
+  <meta property="og:site_name" content="Aaron">
+  <meta property="og:image" content="/assets/documentation/sample-image.jpg">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:url" content="/posts/nginx-image">
+  <meta name="twitter:title" content="http_image_filter_module模块,根据URL生成不同尺寸的图片">
+  <meta name="twitter:description" content="http_image_filter_module模块,根据URL生成不同尺寸的图片">
+  <meta name="twitter:image" content="/assets/documentation/sample-image.jpg">
+
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link href="/feed.xml" type="application/rss+xml" rel="alternate" title="Aaron Last 10 blog posts" />
+
+  
+    <link type="text/css" rel="stylesheet" href="/assets/light.css">
+  
+</head>
+
+<body>
+  <main role="main">
+    <div class="grid grid-centered">
+      <div class="grid-cell">
+        <nav class="header-nav reveal">
+  <a href="/" class="header-logo" title="Aaron">Aaron</a>
+  <ul class="header-links">
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      <li>
+        <a href="/feed.xml" target="_blank" title="RSS">
+          <span class="icon icon-social-rss"></span>
+        </a>
+      </li>
+    
+  </ul>
+</nav>
+
+        <article class="article reveal">
+          <header class="article-header">
+            <h1>http_image_filter_module模块,根据URL生成不同尺寸的图片</h1>
+            <p>http_image_filter_module模块,根据URL生成不同尺寸的图片</p>
+            <div class="article-list-footer">
+              <span class="article-list-date">
+                May 5, 2017
+              </span>
+              <span class="article-list-divider">-</span>
+              <span class="article-list-minutes">
+                
+                
+                  1 minute read
+                
+              </span>
+              <span class="article-list-divider">-</span>
+              <div class="article-list-tags">
+                
+                  <a href="/tag/nginx">nginx</a>
+                
+              </div>
+            </div>
+          </header>
+
+          <div class="article-content">
+            
+<figure class="highlight"><pre><code class="language-conf" data-lang="conf">首先是要在安装时有安装 –<span class="n">with</span>-<span class="n">http_image_filter_module</span>模块
+原理是将一个特定格式的<span class="n">URL</span>，反向代理至一个实际真实路径，进行<span class="n">image_filter</span>生成文件，存储至缓存目录
+这样可以省去一些程序去生成一定比例的图，直接按地址进去生成
+看下面配置
+<span class="n">server</span> {
+    <span class="n">listen</span> <span class="m">88</span>;
+    <span class="n">server_name</span> <span class="m">121</span>.<span class="m">40</span>.<span class="m">133</span>.<span class="m">141</span>;
+    <span class="n">index</span> <span class="n">index</span>.<span class="n">html</span> <span class="n">index</span>.<span class="n">html</span> <span class="n">index</span>.<span class="n">php</span>;
+    <span class="n">root</span> /<span class="n">data</span>/<span class="n">jpg</span>;
+    <span class="n">location</span> ~* ^/<span class="n">resize</span> {
+        <span class="n">root</span> /<span class="n">data</span>/<span class="n">jpg</span>/$<span class="n">server_name</span>;
+        <span class="c">#设置默认宽高比
+</span>                <span class="n">set</span> $<span class="n">width</span>  <span class="m">150</span>;
+        <span class="n">set</span> $<span class="n">height</span> <span class="m">100</span>;
+        <span class="n">set</span> $<span class="n">dimens</span> <span class="s2">""</span>;
+                <span class="c">#特定地址处理既一个需要相应图片URL
+</span>                <span class="c">#http://121.40.133.141:88/resize_200x200/images/94.jpg
+</span>        <span class="n">if</span> ($<span class="n">uri</span> ~* <span class="s2">"^/resize_(\d+)x(\d+)/(.*)"</span>) {
+            <span class="n">set</span> $<span class="n">width</span> $<span class="m">1</span>;
+            <span class="n">set</span> $<span class="n">height</span> $<span class="m">2</span>;
+            <span class="n">set</span> $<span class="n">image_path</span> $<span class="m">3</span>;
+            <span class="n">set</span> $<span class="n">demins</span> <span class="s2">"_$1x$2"</span>;
+        }
+                <span class="c">#$image_path真实图片路径
+</span>        <span class="n">if</span> ($<span class="n">uri</span> ~* <span class="s2">"^/resize/(.*)"</span>) {
+            <span class="n">set</span> $<span class="n">image_path</span> $<span class="m">1</span>;
+        }
+        <span class="n">set</span> $<span class="n">image_uri</span> <span class="n">images_resize</span>/$<span class="n">image_path</span>?<span class="n">width</span>=$<span class="n">width</span>&amp;<span class="n">height</span>=$<span class="n">height</span>;
+        <span class="n">if</span> (!-<span class="n">f</span> $<span class="n">request_filename</span>) {
+            <span class="n">proxy_pass</span> <span class="n">http</span>://<span class="m">127</span>.<span class="m">0</span>.<span class="m">0</span>.<span class="m">1</span>:<span class="m">88</span>/$<span class="n">image_uri</span>;
+            <span class="n">break</span>;
+        }
+                <span class="c">#图片存储路径
+</span>                <span class="c">#/data/jpg/121.40.133.141/reisze_50x50/images/94.jpg
+</span>        <span class="n">proxy_store</span> /<span class="n">data</span>/<span class="n">jpg</span>/$<span class="n">server_name</span>/<span class="n">reisze</span>$<span class="n">demins</span>/$<span class="n">image_path</span>;
+                <span class="c">#存储权限
+</span>        <span class="n">proxy_store_access</span> <span class="n">user</span>:<span class="n">rw</span> <span class="n">group</span>:<span class="n">rw</span> <span class="n">all</span>:<span class="n">r</span>;
+        <span class="n">proxy_set_header</span> <span class="n">Host</span> $<span class="n">host</span>;
+        <span class="n">expires</span> <span class="m">30</span><span class="n">d</span>;
+        <span class="n">access_log</span> <span class="n">off</span>;
+    }
+    <span class="n">location</span> /<span class="n">images_resize</span> {
+        <span class="n">alias</span> /<span class="n">data</span>/<span class="n">jpg</span>/$<span class="n">server_name</span>;
+        <span class="c">#压缩比例
+</span>                <span class="n">image_filter</span> <span class="n">resize</span> $<span class="n">arg_width</span> $<span class="n">arg_height</span>;
+                <span class="c">#图片质量
+</span>        <span class="n">image_filter_jpeg_quality</span> <span class="m">100</span>;
+        <span class="n">access_log</span> <span class="n">off</span>;
+    }
+}</code></pre></figure>
+
+          </div>
+
+          <div class="article-share">
+            
+            <a href="" title="Share on Twitter" onclick="window.open('https://twitter.com/home?status=http_image_filter_module模块,根据URL生成不同尺寸的图片 - /posts/nginx-image ', 'newwindow', 'width=500, height=225'); return false;">
+              <span class="icon icon-social-twitter"></span>
+            </a>
+            <a href="" title="Share on Facebook" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=/posts/nginx-image', 'newwindow', 'width=500, height=500'); return false;">
+              <span class="icon icon-social-facebook"></span>
+            </a>
+            <a href="" title="Share on Google+" onclick="window.open('https://plus.google.com/share?url=/posts/nginx-image', 'newwindow', 'width=550, height=400'); return false;">
+              <span class="icon icon-social-googleplus"></span>
+            </a>
+          </div>
+
+          
+        </article>
+        <footer class="footer reveal">
+  <p>
+    -- 勤于耕,荒于嘻 
+    <a href="/about" title="About me">关于我</a><!-- . Download it <a href="https://github.com/nielsenramon/chalk" target="_blank" title="Download Chalk">here --></a>.
+  </p>
+</footer>
+
+      </div>
+    </div>
+  </main>
+  <script type="text/javascript" src="/assets/vendor.js"></script>
+<script type="text/javascript" src="/assets/application.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Cormorant Garamond:700', 'Lato:300,400,700']
+    }
+  });
+</script>
+
+
+
+</body>
+</html>

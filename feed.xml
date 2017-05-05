@@ -7,43 +7,83 @@
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
-        <title>Sublime简体转繁体插件</title>
-        <description>多语言常有简体转繁体的需求,所以写了它.基于Web的.离线状态不可用</description>
-        <pubDate>Mon, 20 Mar 2017 00:00:00 +0800</pubDate>
-        <link>/posts/sublime-cn2tw</link>
-        <guid isPermaLink="true">/posts/sublime-cn2tw</guid>
+        <title>多服务器间下载资源包</title>
+        <description>集群多服务器间下载资源包</description>
+        <pubDate>Fri, 05 May 2017 00:00:00 +0800</pubDate>
+        <link>/posts/server-down-bash</link>
+        <guid isPermaLink="true">/posts/server-down-bash</guid>
       </item>
     
       <item>
-        <title>PHP 根据时区转换指定时间</title>
-        <description>在单点服务器上布署多语言多终端的,时间,时区是经常需要注意</description>
-        <pubDate>Tue, 07 Feb 2017 00:00:00 +0800</pubDate>
-        <link>/posts/phpfuncs-list</link>
-        <guid isPermaLink="true">/posts/phpfuncs-list</guid>
+        <title>LINUX网卡实时流量监控</title>
+        <description>LINUX网卡实时流量监控</description>
+        <pubDate>Fri, 05 May 2017 00:00:00 +0800</pubDate>
+        <link>/posts/python-network</link>
+        <guid isPermaLink="true">/posts/python-network</guid>
       </item>
     
       <item>
-        <title>Introducing chalk</title>
-        <description>Chalk is a high quality, completely customizable, performant and 100% free blog template for Jekyll.</description>
-        <pubDate>Mon, 17 Oct 2016 00:00:00 +0800</pubDate>
-        <link>/posts/introducing-chalk</link>
-        <guid isPermaLink="true">/posts/introducing-chalk</guid>
+        <title>[转]PhpExcel中文帮助手册</title>
+        <description>报表常用PhpExcel,记录方便使用</description>
+        <pubDate>Fri, 05 May 2017 00:00:00 +0800</pubDate>
+        <link>/posts/php-phpexcel</link>
+        <guid isPermaLink="true">/posts/php-phpexcel</guid>
       </item>
     
       <item>
-        <title>How to configure Chalk</title>
-        <description>Learn more about the config file for Chalk and how to set it up properly.</description>
-        <pubDate>Sun, 16 Oct 2016 00:00:00 +0800</pubDate>
-        <link>/posts/configuring-chalk</link>
-        <guid isPermaLink="true">/posts/configuring-chalk</guid>
+        <title>断点续传</title>
+        <description>Nginx Xsendfile模块, 断点续传</description>
+        <pubDate>Fri, 05 May 2017 00:00:00 +0800</pubDate>
+        <link>/posts/php-download</link>
+        <guid isPermaLink="true">/posts/php-download</guid>
       </item>
     
       <item>
-        <title>Chalk sample post with all elements</title>
-        <description>Have a look at all the predesigned elements you can use in Chalk.</description>
-        <pubDate>Sat, 15 Oct 2016 00:00:00 +0800</pubDate>
-        <link>/posts/chalk-sample-post-with-all-elements</link>
-        <guid isPermaLink="true">/posts/chalk-sample-post-with-all-elements</guid>
+        <title>检测客户终端是否是移动设备</title>
+        <description>PHP</description>
+        <pubDate>Fri, 05 May 2017 00:00:00 +0800</pubDate>
+        <link>/posts/php-check-mobile</link>
+        <guid isPermaLink="true">/posts/php-check-mobile</guid>
+      </item>
+    
+      <item>
+        <title>Nginx根据URL分流流量至不同的服务器</title>
+        <description>Nginx根据URL分流流量至不同的服务器</description>
+        <pubDate>Fri, 05 May 2017 00:00:00 +0800</pubDate>
+        <link>/posts/nginx-url-brance</link>
+        <guid isPermaLink="true">/posts/nginx-url-brance</guid>
+      </item>
+    
+      <item>
+        <title>http_image_filter_module模块,根据URL生成不同尺寸的图片</title>
+        <description>http_image_filter_module模块,根据URL生成不同尺寸的图片</description>
+        <pubDate>Fri, 05 May 2017 00:00:00 +0800</pubDate>
+        <link>/posts/nginx-image</link>
+        <guid isPermaLink="true">/posts/nginx-image</guid>
+      </item>
+    
+      <item>
+        <title>MYSQL视图与事件</title>
+        <description>事件类似于调度,按Mysql中的计时器来定时执行特定SQL,视图一指SQL语句的虚拟表</description>
+        <pubDate>Fri, 05 May 2017 00:00:00 +0800</pubDate>
+        <link>/posts/msyql-event-view</link>
+        <guid isPermaLink="true">/posts/msyql-event-view</guid>
+      </item>
+    
+      <item>
+        <title>Easyui datagrid 表头菜单控制列显示/隐藏列</title>
+        <description>Easyui datagrid 表头菜单控制列显示/隐藏列</description>
+        <pubDate>Fri, 05 May 2017 00:00:00 +0800</pubDate>
+        <link>/posts/easyui-menu-field</link>
+        <guid isPermaLink="true">/posts/easyui-menu-field</guid>
+      </item>
+    
+      <item>
+        <title>easyui自定义扩展datagrid属性:自定义刷新</title>
+        <description>easyui自定义扩展datagrid属性:自定义刷新</description>
+        <pubDate>Fri, 05 May 2017 00:00:00 +0800</pubDate>
+        <link>/posts/easyui-auto-fresh</link>
+        <guid isPermaLink="true">/posts/easyui-auto-fresh</guid>
       </item>
     
   </channel>

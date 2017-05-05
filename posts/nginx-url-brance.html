@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Aaron | Nginx根据URL分流流量至不同的服务器</title>
+  <meta name="description" content="Nginx根据URL分流流量至不同的服务器">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:title" content="Nginx根据URL分流流量至不同的服务器">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="/posts/nginx-url-brance">
+  <meta property="og:description" content="Nginx根据URL分流流量至不同的服务器">
+  <meta property="og:site_name" content="Aaron">
+  <meta property="og:image" content="/assets/documentation/sample-image.jpg">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:url" content="/posts/nginx-url-brance">
+  <meta name="twitter:title" content="Nginx根据URL分流流量至不同的服务器">
+  <meta name="twitter:description" content="Nginx根据URL分流流量至不同的服务器">
+  <meta name="twitter:image" content="/assets/documentation/sample-image.jpg">
+
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link href="/feed.xml" type="application/rss+xml" rel="alternate" title="Aaron Last 10 blog posts" />
+
+  
+    <link type="text/css" rel="stylesheet" href="/assets/light.css">
+  
+</head>
+
+<body>
+  <main role="main">
+    <div class="grid grid-centered">
+      <div class="grid-cell">
+        <nav class="header-nav reveal">
+  <a href="/" class="header-logo" title="Aaron">Aaron</a>
+  <ul class="header-links">
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      <li>
+        <a href="/feed.xml" target="_blank" title="RSS">
+          <span class="icon icon-social-rss"></span>
+        </a>
+      </li>
+    
+  </ul>
+</nav>
+
+        <article class="article reveal">
+          <header class="article-header">
+            <h1>Nginx根据URL分流流量至不同的服务器</h1>
+            <p>Nginx根据URL分流流量至不同的服务器</p>
+            <div class="article-list-footer">
+              <span class="article-list-date">
+                May 5, 2017
+              </span>
+              <span class="article-list-divider">-</span>
+              <span class="article-list-minutes">
+                
+                
+                  2 minute read
+                
+              </span>
+              <span class="article-list-divider">-</span>
+              <div class="article-list-tags">
+                
+                  <a href="/tag/nginx">nginx</a>
+                
+              </div>
+            </div>
+          </header>
+
+          <div class="article-content">
+            <p>本文转自：http://blog.csdn.net/liukeforever/article/details/8282401
+方便以后查阅，MARK下。
+需求让Nginx跟据请求的url不同，而转发到不同的server上
+举例：
+url http://127.0.0.1/json/0769/
+url http://127.0.0.1/json/0734/
+需求把url后缀为0769的请求转发到server1， url 后缀为0734的请求转发到server1
+nginx.conf实现代码</p>
+
+<figure class="highlight"><pre><code class="language-conf" data-lang="conf"><span class="n">worker_processes</span> <span class="m">2</span>;
+  
+<span class="c">#error_log /var/log/nginx/error.log;
+#pid /var/run/nginx.pid;
+</span>  
+<span class="n">events</span> {
+    <span class="n">worker_connections</span> <span class="m">1024</span>;
+    <span class="n">use</span> <span class="n">epoll</span>;
+}
+  
+<span class="n">http</span> {
+    <span class="n">charset</span> <span class="n">utf</span>-<span class="m">8</span>;
+  
+    <span class="n">map</span> $<span class="n">zone</span> $<span class="n">up_stream</span> {
+        ^~<span class="m">0769</span>  <span class="n">frontends_0769</span>;
+        ^~<span class="m">0734</span>  <span class="n">frontends_0734</span>;       
+        <span class="n">default</span> <span class="n">frontends_0769</span>;
+    }
+  
+    <span class="c"># Enumerate all the Tornado servers here
+</span>    <span class="n">upstream</span> <span class="n">frontends_0769</span> {
+        <span class="n">server</span> <span class="m">127</span>.<span class="m">0</span>.<span class="m">0</span>.<span class="m">1</span>:<span class="m">3333</span>;
+        <span class="c">#server 127.0.0.1:3334;
+</span>        <span class="c">#server 127.0.0.1:3335;
+</span>        <span class="c">#server 127.0.0.1:3336;
+</span>    }
+      
+    <span class="n">upstream</span> <span class="n">frontends_0734</span> {
+        <span class="n">server</span> <span class="m">127</span>.<span class="m">0</span>.<span class="m">0</span>.<span class="m">1</span>:<span class="m">3334</span>;
+        <span class="c">#server 127.0.0.1:3334;
+</span>        <span class="c">#server 127.0.0.1:3335;
+</span>        <span class="c">#server 127.0.0.1:3336;
+</span>    }   
+  
+    <span class="n">include</span> <span class="n">mime</span>.<span class="n">types</span>;
+    <span class="n">default_type</span> <span class="n">application</span>/<span class="n">octet</span>-<span class="n">stream</span>;
+  
+    <span class="c">#access_log /var/log/nginx/access.log;
+</span>  
+    <span class="n">keepalive_timeout</span> <span class="m">65</span>;
+    <span class="n">proxy_read_timeout</span> <span class="m">200</span>;
+    <span class="n">sendfile</span> <span class="n">on</span>;
+    <span class="n">tcp_nopush</span> <span class="n">on</span>;
+    <span class="n">tcp_nodelay</span> <span class="n">on</span>;
+    <span class="n">gzip</span> <span class="n">on</span>;
+    <span class="n">gzip_min_length</span> <span class="m">1000</span>;
+    <span class="n">gzip_proxied</span> <span class="n">any</span>;
+    <span class="n">gzip_types</span> <span class="n">text</span>/<span class="n">plain</span> <span class="n">text</span>/<span class="n">css</span> <span class="n">text</span>/<span class="n">xml</span>
+               <span class="n">application</span>/<span class="n">x</span>-<span class="n">javascript</span> <span class="n">application</span>/<span class="n">xml</span>
+               <span class="n">application</span>/<span class="n">atom</span>+<span class="n">xml</span> <span class="n">text</span>/<span class="n">javascript</span>;
+  
+    <span class="c"># Only retry if there was a communication error, not a timeout
+</span>    <span class="c"># on the Tornado server (to avoid propagating "queries of death"
+</span>    <span class="c"># to all frontends)
+</span>    <span class="n">proxy_next_upstream</span> <span class="n">error</span>;
+  
+    <span class="n">server</span> {
+        <span class="n">listen</span> <span class="m">8089</span>;
+  
+        <span class="n">location</span> / {
+            <span class="n">proxy_pass_header</span> <span class="n">Server</span>;
+            <span class="n">proxy_set_header</span> <span class="n">Host</span> $<span class="n">http_host</span>;
+            <span class="n">proxy_redirect</span> <span class="n">off</span>;
+            <span class="n">proxy_set_header</span> <span class="n">X</span>-<span class="n">Real</span>-<span class="n">IP</span> $<span class="n">remote_addr</span>;
+            <span class="n">proxy_set_header</span> <span class="n">X</span>-<span class="n">Scheme</span> $<span class="n">scheme</span>;
+            <span class="c">#proxy_pass http://frontends;
+</span>            <span class="c">#if ( $request_uri ~* /json/(\d\d\d\d)\d+/ ) {
+</span>            <span class="c">#    set $zone $1;
+</span>            <span class="c">#    proxy_pass http://frontends_$zone;
+</span>            <span class="c">#}
+</span>            <span class="n">if</span> ( $<span class="n">request_uri</span> ~ ^/<span class="n">json</span>/(\<span class="n">d</span>+)/$ ) {
+                <span class="n">set</span> $<span class="n">zone</span> $<span class="m">1</span>;
+                <span class="n">proxy_pass</span> <span class="n">http</span>://$<span class="n">up_stream</span>;
+            }           
+              
+        }
+    }
+}</code></pre></figure>
+
+          </div>
+
+          <div class="article-share">
+            
+            <a href="" title="Share on Twitter" onclick="window.open('https://twitter.com/home?status=Nginx根据URL分流流量至不同的服务器 - /posts/nginx-url-brance ', 'newwindow', 'width=500, height=225'); return false;">
+              <span class="icon icon-social-twitter"></span>
+            </a>
+            <a href="" title="Share on Facebook" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=/posts/nginx-url-brance', 'newwindow', 'width=500, height=500'); return false;">
+              <span class="icon icon-social-facebook"></span>
+            </a>
+            <a href="" title="Share on Google+" onclick="window.open('https://plus.google.com/share?url=/posts/nginx-url-brance', 'newwindow', 'width=550, height=400'); return false;">
+              <span class="icon icon-social-googleplus"></span>
+            </a>
+          </div>
+
+          
+        </article>
+        <footer class="footer reveal">
+  <p>
+    -- 勤于耕,荒于嘻 
+    <a href="/about" title="About me">关于我</a><!-- . Download it <a href="https://github.com/nielsenramon/chalk" target="_blank" title="Download Chalk">here --></a>.
+  </p>
+</footer>
+
+      </div>
+    </div>
+  </main>
+  <script type="text/javascript" src="/assets/vendor.js"></script>
+<script type="text/javascript" src="/assets/application.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Cormorant Garamond:700', 'Lato:300,400,700']
+    }
+  });
+</script>
+
+
+
+</body>
+</html>

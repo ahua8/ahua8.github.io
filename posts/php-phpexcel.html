@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Aaron | [转]PhpExcel中文帮助手册</title>
+  <meta name="description" content="报表常用PhpExcel,记录方便使用">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:title" content="[转]PhpExcel中文帮助手册">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="/posts/php-phpexcel">
+  <meta property="og:description" content="报表常用PhpExcel,记录方便使用">
+  <meta property="og:site_name" content="Aaron">
+  <meta property="og:image" content="/assets/documentation/sample-image.jpg">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:url" content="/posts/php-phpexcel">
+  <meta name="twitter:title" content="[转]PhpExcel中文帮助手册">
+  <meta name="twitter:description" content="报表常用PhpExcel,记录方便使用">
+  <meta name="twitter:image" content="/assets/documentation/sample-image.jpg">
+
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link href="/feed.xml" type="application/rss+xml" rel="alternate" title="Aaron Last 10 blog posts" />
+
+  
+    <link type="text/css" rel="stylesheet" href="/assets/light.css">
+  
+</head>
+
+<body>
+  <main role="main">
+    <div class="grid grid-centered">
+      <div class="grid-cell">
+        <nav class="header-nav reveal">
+  <a href="/" class="header-logo" title="Aaron">Aaron</a>
+  <ul class="header-links">
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      <li>
+        <a href="/feed.xml" target="_blank" title="RSS">
+          <span class="icon icon-social-rss"></span>
+        </a>
+      </li>
+    
+  </ul>
+</nav>
+
+        <article class="article reveal">
+          <header class="article-header">
+            <h1>[转]PhpExcel中文帮助手册</h1>
+            <p>报表常用PhpExcel,记录方便使用</p>
+            <div class="article-list-footer">
+              <span class="article-list-date">
+                May 5, 2017
+              </span>
+              <span class="article-list-divider">-</span>
+              <span class="article-list-minutes">
+                
+                
+                  8 minute read
+                
+              </span>
+              <span class="article-list-divider">-</span>
+              <div class="article-list-tags">
+                
+                  <a href="/tag/PHP">PHP</a>
+                
+                  <a href="/tag/PHPExcel">PHPExcel</a>
+                
+              </div>
+            </div>
+          </header>
+
+          <div class="article-content">
+            
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="o">//</span><span class="err">下面是总结的几个使用方法</span>
+<span class="n">include</span> <span class="s">'PHPExcel.php'</span><span class="p">;</span>
+<span class="n">include</span> <span class="s">'PHPExcel/Writer/Excel2007.php'</span><span class="p">;</span>
+<span class="o">//</span><span class="err">或者</span><span class="n">include</span> <span class="s">'PHPExcel/Writer/Excel5.php'</span><span class="p">;</span> <span class="err">用于输出</span><span class="o">.</span><span class="n">xls</span><span class="err">的</span>
+<span class="o">//</span><span class="err">创建一个</span><span class="n">excel</span>
+<span class="err">$</span><span class="n">objPHPExcel</span> <span class="o">=</span> <span class="n">new</span> <span class="n">PHPExcel</span><span class="p">();</span>
+<span class="o">//</span><span class="err">保存</span><span class="n">excel</span><span class="err">—</span><span class="mi">2007</span><span class="err">格式</span>
+<span class="err">$</span><span class="n">objWriter</span> <span class="o">=</span> <span class="n">new</span> <span class="n">PHPExcel_Writer_Excel2007</span><span class="p">(</span><span class="err">$</span><span class="n">objPHPExcel</span><span class="p">);</span>
+<span class="o">//</span><span class="err">或者$</span><span class="n">objWriter</span> <span class="o">=</span> <span class="n">new</span> <span class="n">PHPExcel_Writer_Excel5</span><span class="p">(</span><span class="err">$</span><span class="n">objPHPExcel</span><span class="p">);</span> <span class="err">非</span><span class="mi">2007</span><span class="err">格式</span>
+<span class="err">$</span><span class="n">objWriter</span><span class="o">-&gt;</span><span class="n">save</span><span class="p">(</span><span class="s">"xxx.xlsx"</span><span class="p">);</span>
+<span class="o">//</span><span class="err">直接输出到浏览器</span>
+<span class="err">$</span><span class="n">objWriter</span> <span class="o">=</span> <span class="n">new</span> <span class="n">PHPExcel_Writer_Excel5</span><span class="p">(</span><span class="err">$</span><span class="n">objPHPExcel</span><span class="p">);</span>
+<span class="n">header</span><span class="p">(</span><span class="s">"Pragma: public"</span><span class="p">);</span>
+<span class="n">header</span><span class="p">(</span><span class="s">"Expires: 0″);</span><span class="err">
+</span><span class="s">header("</span><span class="n">Cache</span><span class="o">-</span><span class="n">Control</span><span class="p">:</span><span class="n">must</span><span class="o">-</span><span class="n">revalidate</span><span class="p">,</span> <span class="n">post</span><span class="o">-</span><span class="n">check</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pre</span><span class="o">-</span><span class="n">check</span><span class="o">=</span><span class="mi">0</span><span class="err">″</span><span class="p">);</span>
+<span class="n">header</span><span class="p">(</span><span class="s">"Content-Type:application/force-download"</span><span class="p">);</span>
+<span class="n">header</span><span class="p">(</span><span class="s">"Content-Type:application/vnd.ms-execl"</span><span class="p">);</span>
+<span class="n">header</span><span class="p">(</span><span class="s">"Content-Type:application/octet-stream"</span><span class="p">);</span>
+<span class="n">header</span><span class="p">(</span><span class="s">"Content-Type:application/download"</span><span class="p">);;</span>
+<span class="n">header</span><span class="p">(</span><span class="s">'Content-Disposition:attachment;filename="resume.xls"'</span><span class="p">);</span>
+<span class="n">header</span><span class="p">(</span><span class="s">"Content-Transfer-Encoding:binary"</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objWriter</span><span class="o">-&gt;</span><span class="n">save</span><span class="p">(</span><span class="s">'php://output'</span><span class="p">);</span>
+<span class="o">//</span><span class="err">——————————————————————————————————————–</span>
+<span class="o">//</span><span class="err">设置</span><span class="n">excel</span><span class="err">的属性：</span>
+<span class="o">//</span><span class="err">创建人</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setCreator</span><span class="p">(</span><span class="s">"Maarten Balliauw"</span><span class="p">);</span>
+<span class="o">//</span><span class="err">最后修改人</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setLastModifiedBy</span><span class="p">(</span><span class="s">"Maarten Balliauw"</span><span class="p">);</span>
+<span class="o">//</span><span class="err">标题</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setTitle</span><span class="p">(</span><span class="s">"Office 2007 XLSX Test Document"</span><span class="p">);</span>
+<span class="o">//</span><span class="err">题目</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setSubject</span><span class="p">(</span><span class="s">"Office 2007 XLSX Test Document"</span><span class="p">);</span>
+<span class="o">//</span><span class="err">描述</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setDescription</span><span class="p">(</span><span class="s">"Test document for Office 2007 XLSX, generated using PHP classes."</span><span class="p">);</span>
+<span class="o">//</span><span class="err">关键字</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setKeywords</span><span class="p">(</span><span class="s">"office 2007 openxml php"</span><span class="p">);</span>
+<span class="o">//</span><span class="err">种类</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getProperties</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setCategory</span><span class="p">(</span><span class="s">"Test result file"</span><span class="p">);</span>
+<span class="o">//</span><span class="err">——————————————————————————————————————–</span>
+<span class="o">//</span><span class="err">设置当前的</span><span class="n">sheet</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">setActiveSheetIndex</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="o">//</span><span class="err">设置</span><span class="n">sheet</span><span class="err">的</span><span class="n">name</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setTitle</span><span class="p">(</span><span class="s">'Simple'</span><span class="p">);</span>
+<span class="o">//</span><span class="err">设置单元格的值</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setCellValue</span><span class="p">(</span><span class="s">'A1'</span><span class="p">,</span> <span class="s">'String'</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setCellValue</span><span class="p">(</span><span class="s">'A2'</span><span class="p">,</span> <span class="mi">12</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setCellValue</span><span class="p">(</span><span class="s">'A3'</span><span class="p">,</span> <span class="n">true</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setCellValue</span><span class="p">(</span><span class="s">'C5'</span><span class="p">,</span> <span class="s">'=SUM(C2:C4)'</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setCellValue</span><span class="p">(</span><span class="s">'B8'</span><span class="p">,</span> <span class="s">'=MIN(B2:C5)'</span><span class="p">);</span>
+<span class="o">//</span><span class="err">合并单元格</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">mergeCells</span><span class="p">(</span><span class="s">'A18:E22'</span><span class="p">);</span>
+<span class="o">//</span><span class="err">分离单元格</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">unmergeCells</span><span class="p">(</span><span class="s">'A28:B28'</span><span class="p">);</span>
+<span class="o">//</span>
+<span class="err">保护</span><span class="n">cell</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getProtection</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setSheet</span><span class="p">(</span><span class="n">true</span><span class="p">);</span> <span class="o">//</span> <span class="n">Needs</span> <span class="n">to</span> <span class="n">be</span> <span class="nb">set</span> <span class="n">to</span> <span class="n">true</span> <span class="ow">in</span> <span class="n">order</span> <span class="n">to</span> <span class="n">enable</span> <span class="nb">any</span> <span class="n">worksheet</span> <span class="n">protection</span><span class="err">!</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">protectCells</span><span class="p">(</span><span class="s">'A3:E13'</span><span class="p">,</span> <span class="s">'PHPExcel'</span><span class="p">);</span>
+<span class="o">//</span><span class="err">设置格式</span>
+<span class="o">//</span> <span class="n">Set</span> <span class="n">cell</span> <span class="n">number</span> <span class="n">formats</span>
+<span class="n">echo</span> <span class="n">date</span><span class="p">(</span><span class="s">'H:i:s'</span><span class="p">)</span> <span class="o">.</span> <span class="s">" Set cell number formats</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'E4'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getNumberFormat</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setFormatCode</span><span class="p">(</span><span class="n">PHPExcel_Style_NumberFormat</span><span class="p">::</span><span class="n">FORMAT_CURRENCY_EUR_SIMPLE</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">duplicateStyle</span><span class="p">(</span> <span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'E4'</span><span class="p">),</span> <span class="s">'E5:E13'</span> <span class="p">);</span>
+<span class="o">//</span><span class="err">设置宽</span><span class="n">width</span>
+<span class="o">//</span> <span class="n">Set</span> <span class="n">column</span> <span class="n">widths</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getColumnDimension</span><span class="p">(</span><span class="s">'B'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">setAutoSize</span><span class="p">(</span><span class="n">true</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getColumnDimension</span><span class="p">(</span><span class="s">'D'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">setWidth</span><span class="p">(</span><span class="mi">12</span><span class="p">);</span>
+<span class="o">//</span><span class="err">设置</span><span class="n">font</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'B1'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getFont</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setName</span><span class="p">(</span><span class="s">'Candara'</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'B1'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getFont</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setSize</span><span class="p">(</span><span class="mi">20</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'B1'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getFont</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setBold</span><span class="p">(</span><span class="n">true</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'B1'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getFont</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setUnderline</span><span class="p">(</span><span class="n">PHPExcel_Style_Font</span><span class="p">::</span><span class="n">UNDERLINE_SINGLE</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'B1'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getFont</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getColor</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setARGB</span><span class="p">(</span><span class="n">PHPExcel_Style_Color</span><span class="p">::</span><span class="n">COLOR_WHITE</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'E1'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getFont</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getColor</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setARGB</span><span class="p">(</span><span class="n">PHPExcel_Style_Color</span><span class="p">::</span><span class="n">COLOR_WHITE</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'D13'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getFont</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setBold</span><span class="p">(</span><span class="n">true</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'E13'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getFont</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setBold</span><span class="p">(</span><span class="n">true</span><span class="p">);</span>
+<span class="o">//</span><span class="err">设置</span><span class="n">align</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'D11'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getAlignment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setHorizontal</span><span class="p">(</span><span class="n">PHPExcel_Style_Alignment</span><span class="p">::</span><span class="n">HORIZONTAL_RIGHT</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'D12'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getAlignment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setHorizontal</span><span class="p">(</span><span class="n">PHPExcel_Style_Alignment</span><span class="p">::</span><span class="n">HORIZONTAL_RIGHT</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'D13'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getAlignment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setHorizontal</span><span class="p">(</span><span class="n">PHPExcel_Style_Alignment</span><span class="p">::</span><span class="n">HORIZONTAL_RIGHT</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'A18'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getAlignment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setHorizontal</span><span class="p">(</span><span class="n">PHPExcel_Style_Alignment</span><span class="p">::</span><span class="n">HORIZONTAL_JUSTIFY</span><span class="p">);</span>
+<span class="o">////</span><span class="err">垂直居中</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'A18'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getAlignment</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setVertical</span><span class="p">(</span><span class="n">PHPExcel_Style_Alignment</span><span class="p">::</span><span class="n">VERTICAL_CENTER</span><span class="p">);</span>
+<span class="o">//</span><span class="err">设置</span><span class="n">column</span><span class="err">的</span><span class="n">border</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'A4'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getBorders</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getTop</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setBorderStyle</span><span class="p">(</span><span class="n">PHPExcel_Style_Border</span><span class="p">::</span><span class="n">BORDER_THIN</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'B4'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getBorders</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getTop</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setBorderStyle</span><span class="p">(</span><span class="n">PHPExcel_Style_Border</span><span class="p">::</span><span class="n">BORDER_THIN</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'C4'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getBorders</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getTop</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setBorderStyle</span><span class="p">(</span><span class="n">PHPExcel_Style_Border</span><span class="p">::</span><span class="n">BORDER_THIN</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'D4'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getBorders</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getTop</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setBorderStyle</span><span class="p">(</span><span class="n">PHPExcel_Style_Border</span><span class="p">::</span><span class="n">BORDER_THIN</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'E4'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getBorders</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getTop</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setBorderStyle</span><span class="p">(</span><span class="n">PHPExcel_Style_Border</span><span class="p">::</span><span class="n">BORDER_THIN</span><span class="p">);</span>
+<span class="o">//</span><span class="err">设置</span><span class="n">border</span><span class="err">的</span><span class="n">color</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'D13'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getBorders</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getLeft</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getColor</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setARGB</span><span class="p">(</span><span class="s">'FF993300'</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'D13'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getBorders</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getTop</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getColor</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setARGB</span><span class="p">(</span><span class="s">'FF993300'</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'D13'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getBorders</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getBottom</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getColor</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setARGB</span><span class="p">(</span><span class="s">'FF993300'</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'E13'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getBorders</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getTop</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getColor</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setARGB</span><span class="p">(</span><span class="s">'FF993300'</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'E13'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getBorders</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getBottom</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getColor</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setARGB</span><span class="p">(</span><span class="s">'FF993300'</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'E13'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getBorders</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getRight</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getColor</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setARGB</span><span class="p">(</span><span class="s">'FF993300'</span><span class="p">);</span>
+<span class="o">//</span><span class="err">设置填充颜色</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'A1'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getFill</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setFillType</span><span class="p">(</span><span class="n">PHPExcel_Style_Fill</span><span class="p">::</span><span class="n">FILL_SOLID</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'A1'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getFill</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStartColor</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setARGB</span><span class="p">(</span><span class="s">'FF808080'</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'B1'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getFill</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setFillType</span><span class="p">(</span><span class="n">PHPExcel_Style_Fill</span><span class="p">::</span><span class="n">FILL_SOLID</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStyle</span><span class="p">(</span><span class="s">'B1'</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getFill</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getStartColor</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setARGB</span><span class="p">(</span><span class="s">'FF808080'</span><span class="p">);</span>
+<span class="o">//</span><span class="err">加图片</span>
+<span class="err">$</span><span class="n">objDrawing</span> <span class="o">=</span> <span class="n">new</span> <span class="n">PHPExcel_Worksheet_Drawing</span><span class="p">();</span>
+<span class="err">$</span><span class="n">objDrawing</span><span class="o">-&gt;</span><span class="n">setName</span><span class="p">(</span><span class="s">'Logo'</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objDrawing</span><span class="o">-&gt;</span><span class="n">setDescription</span><span class="p">(</span><span class="s">'Logo'</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objDrawing</span><span class="o">-&gt;</span><span class="n">setPath</span><span class="p">(</span><span class="s">'./images/officelogo.jpg'</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objDrawing</span><span class="o">-&gt;</span><span class="n">setHeight</span><span class="p">(</span><span class="mi">36</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objDrawing</span><span class="o">-&gt;</span><span class="n">setWorksheet</span><span class="p">(</span><span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">());</span>
+<span class="err">$</span><span class="n">objDrawing</span> <span class="o">=</span> <span class="n">new</span> <span class="n">PHPExcel_Worksheet_Drawing</span><span class="p">();</span>
+<span class="err">$</span><span class="n">objDrawing</span><span class="o">-&gt;</span><span class="n">setName</span><span class="p">(</span><span class="s">'Paid'</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objDrawing</span><span class="o">-&gt;</span><span class="n">setDescription</span><span class="p">(</span><span class="s">'Paid'</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objDrawing</span><span class="o">-&gt;</span><span class="n">setPath</span><span class="p">(</span><span class="s">'./images/paid.png'</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objDrawing</span><span class="o">-&gt;</span><span class="n">setCoordinates</span><span class="p">(</span><span class="s">'B15'</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objDrawing</span><span class="o">-&gt;</span><span class="n">setOffsetX</span><span class="p">(</span><span class="mi">110</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objDrawing</span><span class="o">-&gt;</span><span class="n">setRotation</span><span class="p">(</span><span class="mi">25</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objDrawing</span><span class="o">-&gt;</span><span class="n">getShadow</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setVisible</span><span class="p">(</span><span class="n">true</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objDrawing</span><span class="o">-&gt;</span><span class="n">getShadow</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setDirection</span><span class="p">(</span><span class="mi">45</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objDrawing</span><span class="o">-&gt;</span><span class="n">setWorksheet</span><span class="p">(</span><span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">());</span>
+<span class="o">//</span><span class="err">处理中文输出问题</span>
+<span class="o">//</span><span class="err">需要将字符串转化为</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span><span class="err">编码，才能正常输出，否则中文字符将输出为空白，如下处理：</span>
+<span class="err">$</span><span class="nb">str</span>  <span class="o">=</span> <span class="n">iconv</span><span class="p">(</span><span class="s">'gb2312'</span><span class="p">,</span> <span class="s">'utf-8'</span><span class="p">,</span> <span class="err">$</span><span class="nb">str</span><span class="p">);</span>
+<span class="o">//</span><span class="err">或者你可以写一个函数专门处理中文字符串：</span>
+<span class="n">function</span> <span class="n">convertUTF8</span><span class="p">(</span><span class="err">$</span><span class="nb">str</span><span class="p">)</span>
+<span class="p">{</span>
+   <span class="k">if</span><span class="p">(</span><span class="n">empty</span><span class="p">(</span><span class="err">$</span><span class="nb">str</span><span class="p">))</span> <span class="k">return</span> <span class="s">''</span><span class="p">;</span>
+   <span class="k">return</span>  <span class="n">iconv</span><span class="p">(</span><span class="s">'gb2312'</span><span class="p">,</span> <span class="s">'utf-8'</span><span class="p">,</span> <span class="err">$</span><span class="nb">str</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="o">//</span><span class="err">从数据库输出数据处理方式</span>
+<span class="o">//</span><span class="err">从数据库读取数据如：</span>
+<span class="err">$</span><span class="n">db</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Mysql</span><span class="p">(</span><span class="err">$</span><span class="n">dbconfig</span><span class="p">);</span>
+<span class="err">$</span><span class="n">sql</span> <span class="o">=</span> <span class="s">"SELECT * FROM  表名"</span><span class="p">;</span>
+<span class="err">$</span><span class="n">row</span> <span class="o">=</span> <span class="err">$</span><span class="n">db</span><span class="o">-&gt;</span><span class="n">GetAll</span><span class="p">(</span><span class="err">$</span><span class="n">sql</span><span class="p">);</span>  <span class="o">//</span> <span class="err">$</span><span class="n">row</span> <span class="err">为二维数组</span>
+<span class="err">$</span><span class="n">count</span> <span class="o">=</span> <span class="n">count</span><span class="p">(</span><span class="err">$</span><span class="n">row</span><span class="p">);</span>
+<span class="k">for</span> <span class="p">(</span><span class="err">$</span><span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="err">$</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="err">$</span><span class="n">count</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span> <span class="err">$</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+ <span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setCellValue</span><span class="p">(</span><span class="s">'A'</span> <span class="o">.</span> <span class="err">$</span><span class="n">i</span><span class="p">,</span> <span class="n">convertUTF8</span><span class="p">(</span><span class="err">$</span><span class="n">row</span><span class="p">[</span><span class="err">$</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]));</span>
+ <span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setCellValue</span><span class="p">(</span><span class="s">'B'</span> <span class="o">.</span> <span class="err">$</span><span class="n">i</span><span class="p">,</span> <span class="n">convertUTF8</span><span class="p">(</span><span class="err">$</span><span class="n">row</span><span class="p">[</span><span class="err">$</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="p">][</span><span class="mi">2</span><span class="p">]));</span>
+ <span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setCellValue</span><span class="p">(</span><span class="s">'C'</span> <span class="o">.</span> <span class="err">$</span><span class="n">i</span><span class="p">,</span> <span class="n">convertUTF8</span><span class="p">(</span><span class="err">$</span><span class="n">row</span><span class="p">[</span><span class="err">$</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="p">][</span><span class="mi">3</span><span class="p">]));</span>
+ <span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setCellValue</span><span class="p">(</span><span class="s">'D'</span> <span class="o">.</span> <span class="err">$</span><span class="n">i</span><span class="p">,</span> <span class="n">convertUTF8</span><span class="p">(</span><span class="err">$</span><span class="n">row</span><span class="p">[</span><span class="err">$</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="p">][</span><span class="mi">4</span><span class="p">]));</span>
+ <span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setCellValue</span><span class="p">(</span><span class="s">'E'</span> <span class="o">.</span> <span class="err">$</span><span class="n">i</span><span class="p">,</span> <span class="n">convertUTF8</span><span class="p">(</span><span class="n">date</span><span class="p">(</span><span class="s">"Y-m-d"</span><span class="p">,</span> <span class="err">$</span><span class="n">row</span><span class="p">[</span><span class="err">$</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="p">][</span><span class="mi">5</span><span class="p">])));</span>
+ <span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setCellValue</span><span class="p">(</span><span class="s">'F'</span> <span class="o">.</span> <span class="err">$</span><span class="n">i</span><span class="p">,</span> <span class="n">convertUTF8</span><span class="p">(</span><span class="err">$</span><span class="n">row</span><span class="p">[</span><span class="err">$</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="p">][</span><span class="mi">6</span><span class="p">]));</span>
+ <span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setCellValue</span><span class="p">(</span><span class="s">'G'</span> <span class="o">.</span> <span class="err">$</span><span class="n">i</span><span class="p">,</span> <span class="n">convertUTF8</span><span class="p">(</span><span class="err">$</span><span class="n">row</span><span class="p">[</span><span class="err">$</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="p">][</span><span class="mi">7</span><span class="p">]));</span>
+ <span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">getActiveSheet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setCellValue</span><span class="p">(</span><span class="s">'H'</span> <span class="o">.</span> <span class="err">$</span><span class="n">i</span><span class="p">,</span> <span class="n">convertUTF8</span><span class="p">(</span><span class="err">$</span><span class="n">row</span><span class="p">[</span><span class="err">$</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="p">][</span><span class="mi">8</span><span class="p">]));</span>
+<span class="p">}</span>
+<span class="o">//</span><span class="err">在默认</span><span class="n">sheet</span><span class="err">后，创建一个</span><span class="n">worksheet</span>
+<span class="n">echo</span> <span class="n">date</span><span class="p">(</span><span class="s">'H:i:s'</span><span class="p">)</span> <span class="o">.</span> <span class="s">" Create new Worksheet object</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="err">$</span><span class="n">objPHPExcel</span><span class="o">-&gt;</span><span class="n">createSheet</span><span class="p">();</span>
+<span class="err">$</span><span class="n">objWriter</span> <span class="o">=</span> <span class="n">PHPExcel_IOFactory</span><span class="p">::</span><span class="n">createWriter</span><span class="p">(</span><span class="err">$</span><span class="n">objExcel</span><span class="p">,</span> <span class="s">'Excel5'</span><span class="p">);</span>
+<span class="err">$</span><span class="n">objWriter</span><span class="o">-</span><span class="n">save</span><span class="p">(</span><span class="s">'php://output'</span><span class="p">);</span></code></pre></figure>
+
+          </div>
+
+          <div class="article-share">
+            
+            <a href="" title="Share on Twitter" onclick="window.open('https://twitter.com/home?status=[转]PhpExcel中文帮助手册 - /posts/php-phpexcel ', 'newwindow', 'width=500, height=225'); return false;">
+              <span class="icon icon-social-twitter"></span>
+            </a>
+            <a href="" title="Share on Facebook" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=/posts/php-phpexcel', 'newwindow', 'width=500, height=500'); return false;">
+              <span class="icon icon-social-facebook"></span>
+            </a>
+            <a href="" title="Share on Google+" onclick="window.open('https://plus.google.com/share?url=/posts/php-phpexcel', 'newwindow', 'width=550, height=400'); return false;">
+              <span class="icon icon-social-googleplus"></span>
+            </a>
+          </div>
+
+          
+        </article>
+        <footer class="footer reveal">
+  <p>
+    -- 勤于耕,荒于嘻 
+    <a href="/about" title="About me">关于我</a><!-- . Download it <a href="https://github.com/nielsenramon/chalk" target="_blank" title="Download Chalk">here --></a>.
+  </p>
+</footer>
+
+      </div>
+    </div>
+  </main>
+  <script type="text/javascript" src="/assets/vendor.js"></script>
+<script type="text/javascript" src="/assets/application.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Cormorant Garamond:700', 'Lato:300,400,700']
+    }
+  });
+</script>
+
+
+
+</body>
+</html>
