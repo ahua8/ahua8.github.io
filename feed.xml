@@ -7,6 +7,14 @@
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>PHP ReflectionClass 反射类</title>
+        <description>PHP </description>
+        <pubDate>Wed, 26 Jul 2017 00:00:00 +0800</pubDate>
+        <link>/posts/php-refletion</link>
+        <guid isPermaLink="true">/posts/php-refletion</guid>
+      </item>
+    
+      <item>
         <title>多服务器间下载资源包</title>
         <description>集群多服务器间下载资源包</description>
         <pubDate>Fri, 05 May 2017 00:00:00 +0800</pubDate>
@@ -76,14 +84,6 @@
         <pubDate>Fri, 05 May 2017 00:00:00 +0800</pubDate>
         <link>/posts/easyui-menu-field</link>
         <guid isPermaLink="true">/posts/easyui-menu-field</guid>
-      </item>
-    
-      <item>
-        <title>easyui自定义扩展datagrid属性:自定义刷新</title>
-        <description>easyui自定义扩展datagrid属性:自定义刷新</description>
-        <pubDate>Fri, 05 May 2017 00:00:00 +0800</pubDate>
-        <link>/posts/easyui-auto-fresh</link>
-        <guid isPermaLink="true">/posts/easyui-auto-fresh</guid>
       </item>
     
   </channel>
