@@ -2,15 +2,15 @@
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>/tag/design/</loc>
-<lastmod>2017-07-26T14:41:44+08:00</lastmod>
+<lastmod>2017-10-19T16:48:21+08:00</lastmod>
 </url>
 <url>
 <loc>/tag/jekyll/</loc>
-<lastmod>2017-07-26T14:41:44+08:00</lastmod>
+<lastmod>2017-10-19T16:48:21+08:00</lastmod>
 </url>
 <url>
 <loc>/tag/web/</loc>
-<lastmod>2017-07-26T14:41:44+08:00</lastmod>
+<lastmod>2017-10-19T16:48:21+08:00</lastmod>
 </url>
 <url>
 <loc>/posts/chalk-sample-post-with-all-elements</loc>
@@ -75,6 +75,10 @@
 <url>
 <loc>/posts/php-refletion</loc>
 <lastmod>2017-07-26T00:00:00+08:00</lastmod>
+</url>
+<url>
+<loc>/posts/log-elk</loc>
+<lastmod>2017-10-19T00:00:00+08:00</lastmod>
 </url>
 <url>
 <loc>/about</loc>

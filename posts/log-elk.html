@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Aaron | Macos ELK安装及配置</title>
+  <meta name="description" content="ELK是非常简单的做日志处理及出图表,只需简单的配置">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:title" content="Macos ELK安装及配置">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="/posts/log-elk">
+  <meta property="og:description" content="ELK是非常简单的做日志处理及出图表,只需简单的配置">
+  <meta property="og:site_name" content="Aaron">
+  <meta property="og:image" content="/assets/documentation/sample-image.jpg">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:url" content="/posts/log-elk">
+  <meta name="twitter:title" content="Macos ELK安装及配置">
+  <meta name="twitter:description" content="ELK是非常简单的做日志处理及出图表,只需简单的配置">
+  <meta name="twitter:image" content="/assets/documentation/sample-image.jpg">
+
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link href="/feed.xml" type="application/rss+xml" rel="alternate" title="Aaron Last 10 blog posts" />
+
+  
+    <link type="text/css" rel="stylesheet" href="/assets/light.css">
+  
+</head>
+
+<body>
+  <main role="main">
+    <div class="grid grid-centered">
+      <div class="grid-cell">
+        <nav class="header-nav reveal">
+  <a href="/" class="header-logo" title="Aaron">Aaron</a>
+  <ul class="header-links">
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      <li>
+        <a href="/feed.xml" target="_blank" title="RSS">
+          <span class="icon icon-social-rss"></span>
+        </a>
+      </li>
+    
+  </ul>
+</nav>
+
+        <article class="article reveal">
+          <header class="article-header">
+            <h1>Macos ELK安装及配置</h1>
+            <p>ELK是非常简单的做日志处理及出图表,只需简单的配置</p>
+            <div class="article-list-footer">
+              <span class="article-list-date">
+                October 19, 2017
+              </span>
+              <span class="article-list-divider">-</span>
+              <span class="article-list-minutes">
+                
+                
+                  2 minute read
+                
+              </span>
+              <span class="article-list-divider">-</span>
+              <div class="article-list-tags">
+                
+                  <a href="/tag/Web">Web</a>
+                
+                  <a href="/tag/log分析">log分析</a>
+                
+                  <a href="/tag/elk">elk</a>
+                
+                  <a href="/tag/运维">运维</a>
+                
+              </div>
+            </div>
+          </header>
+
+          <div class="article-content">
+            <h1 id="安装">安装</h1>
+<p>MAC基于brew安装相对简单
+ELK: 
+    + elasticsearch  基于java的,内存全文索引
+    + logstash
+    + kibana</p>
+
+<p>需要安装java.我安装的是java8</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">    brew install java8
+    java -version
+
+    brew install elasticsearch
+    elasticsearch -v
+
+    <span class="c">#启动与停止</span>
+    brew services start elasticsearch
+    brew services stop elasticsearch
+
+    <span class="c">#安装</span>
+    brew install logstash
+    logstash --version</code></pre></figure>
+
+<p>kibana 不需要安装,直接官网下载使用,主要是对elasticsearch的访问及数据展示
+Kibana 运行,进入安装目录</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">    ./bin/kibana</code></pre></figure>
+
+<p>分析日志是使用logstash
+启动方式:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">    logstash -f /var/conf/logstash.cnf <span class="c">#/var/conf/logstash.cnf是自己配置的文件</span></code></pre></figure>
+
+<p>logstash 过程 input(输入) -&gt; filter(分析) -&gt; output(输出)</p>
+
+<p>配置如下</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">input</span> <span class="p">{</span>
+    <span class="c1">#stdin 输入</span>
+    <span class="n">file</span> <span class="p">{</span>
+        <span class="n">path</span> <span class="o">=&gt;</span> <span class="s2">"/var/wwwroot/access_log-*"</span> <span class="c1">#可以使用通配符</span>
+        <span class="n">start_position</span> <span class="o">=&gt;</span> <span class="n">beginning</span> <span class="c1">#开始行</span>
+        <span class="n">ignore_older</span> <span class="o">=&gt;</span> <span class="mi">0</span>
+        <span class="n">sincedb_path</span> <span class="o">=&gt;</span> <span class="s2">"/dev/null"</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="n">filter</span> <span class="p">{</span>
+    <span class="n">grok</span> <span class="p">{</span>
+        <span class="c1">#匹配一行日志 COMBINEDAPACHELOG内置的正则</span>
+        <span class="n">match</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="s2">"message"</span> <span class="o">=&gt;</span> <span class="s2">"%{COMBINEDAPACHELOG} (?:%{NUMBER:duration}) (?:%{NUMBER:time})"</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">date</span> <span class="p">{</span>
+        <span class="c1">#格式日期</span>
+        <span class="n">match</span> <span class="o">=&gt;</span> <span class="p">[</span> <span class="s2">"timestamp"</span> <span class="p">,</span> <span class="s2">"dd/MMM/yyyy:HH:mm:ss Z"</span> <span class="p">]</span>
+    <span class="p">}</span>
+    <span class="n">useragent</span> <span class="p">{</span>
+         <span class="n">source</span> <span class="o">=&gt;</span> <span class="s2">"agent"</span>
+         <span class="n">target</span> <span class="o">=&gt;</span> <span class="s2">"browser"</span>  
+    <span class="p">}</span>
+    <span class="n">ruby</span> <span class="p">{</span>
+            <span class="n">code</span> <span class="o">=&gt;</span> <span class="s2">"
+                require 'time'
+                url_match = /(.*).(css|js|png|html|gif|png|woff|ico)/.match(event.get('request'))
+                if ( url_match )
+                    url_type = 'static'
+                else
+                    url_type = 'dynamic'
+                end
+                event.set('url_type',url_type)
+                module_t = /</span><span class="se">\/</span><span class="s2">index.php</span><span class="se">\/</span><span class="s2">(.*?)</span><span class="se">\/</span><span class="s2">.*/.match(event.get('request'))
+                if ( module_t )
+                    event.set('module_name', module_t[1])
+                end
+                module_appcan = /</span><span class="se">\/</span><span class="s2">index.php</span><span class="se">\/</span><span class="s2">Appcan</span><span class="se">\/</span><span class="s2">(.*?)</span><span class="se">\?</span><span class="s2">.*/.match(event.get('request'))
+                if ( module_appcan )
+                    event.set('appcan_name', module_appcan[1])
+                end
+                #日期处理
+                date = event.get('timestamp')
+                dateobj = DateTime.strptime(date, '%d/%b/%Y:%H:%M:%S %Z')
+                event.set('hour', dateobj.hour)
+                event.set('day', dateobj.day)
+                event.set('month', dateobj.month)
+                event.set('date', dateobj.strftime('%Y%m%d'))
+
+                #响应时间处理
+                duration = event.get('duration')
+                duration = duration.to_i/1000;
+                if (duration &gt;= 5000)
+                    event.set('duration', 5000)
+                elsif (duration &gt;= 1000)
+                    event.set('duration', 1000)
+                elsif (duration &gt;= 100)
+                    event.set('duration', 100)
+                elsif (duration &gt;= 50)
+                    event.set('duration', 50)
+                elsif (duration &gt;= 30)
+                    event.set('duration', 30)
+                elsif (duration &gt;= 10)
+                    event.set('duration', 10)
+                elsif (duration &gt;= 5)
+                    event.set('duration', 5)
+                elsif (duration &gt;= 1)
+                    event.set('duration', 1)
+                else
+                    event.set('duration', 0.5)
+                end
+            "</span>
+
+     <span class="n">remove_field</span> <span class="o">=&gt;</span> <span class="p">[</span> <span class="s2">"host"</span><span class="p">,</span><span class="s2">"path"</span><span class="p">,</span><span class="s2">"auth"</span><span class="p">,</span><span class="s2">"ident"</span><span class="p">,</span><span class="s2">"verb"</span><span class="p">,</span><span class="s2">"message"</span><span class="p">,</span><span class="s2">"referrer"</span><span class="p">]</span>
+
+        <span class="p">}</span>
+<span class="p">}</span>
+<span class="n">output</span> <span class="p">{</span>
+    <span class="n">elasticsearch</span> <span class="p">{}</span> <span class="c1">#设置输出选项</span>
+    <span class="n">stdout</span> <span class="p">{</span>
+        <span class="c1">#codec =&gt; rubydebug 调试可开</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Kibana的图表功能主要是提取数据.
+结果如图
+<a href="/assets/documentation/elk.png" class="fluidbox-trigger">
+  <img src="/assets/documentation/elk.png" alt="elk" />
+</a></p>
+
+
+          </div>
+
+          <div class="article-share">
+            
+            <a href="" title="Share on Twitter" onclick="window.open('https://twitter.com/home?status=Macos ELK安装及配置 - /posts/log-elk ', 'newwindow', 'width=500, height=225'); return false;">
+              <span class="icon icon-social-twitter"></span>
+            </a>
+            <a href="" title="Share on Facebook" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=/posts/log-elk', 'newwindow', 'width=500, height=500'); return false;">
+              <span class="icon icon-social-facebook"></span>
+            </a>
+            <a href="" title="Share on Google+" onclick="window.open('https://plus.google.com/share?url=/posts/log-elk', 'newwindow', 'width=550, height=400'); return false;">
+              <span class="icon icon-social-googleplus"></span>
+            </a>
+          </div>
+
+          
+        </article>
+        <footer class="footer reveal">
+  <p>
+    -- 勤于耕,荒于嘻 
+    <a href="/about" title="About me">关于我</a><!-- . Download it <a href="https://github.com/nielsenramon/chalk" target="_blank" title="Download Chalk">here --></a>.
+  </p>
+</footer>
+
+      </div>
+    </div>
+  </main>
+  <script type="text/javascript" src="/assets/vendor.js"></script>
+<script type="text/javascript" src="/assets/application.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Cormorant Garamond:700', 'Lato:300,400,700']
+    }
+  });
+</script>
+
+
+
+</body>
+</html>
