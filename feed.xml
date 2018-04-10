@@ -7,6 +7,14 @@
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>Apache根据URL分开记录日志文件</title>
+        <description>在对日志进行分析时,可能需要对URL的日志进行分开记录.不改变源代码,apache写跨域代码</description>
+        <pubDate>Tue, 10 Apr 2018 00:00:00 +0800</pubDate>
+        <link>/posts/apache-setinvif-setheader</link>
+        <guid isPermaLink="true">/posts/apache-setinvif-setheader</guid>
+      </item>
+    
+      <item>
         <title>Macos ELK安装及配置</title>
         <description>ELK是非常简单的做日志处理及出图表,只需简单的配置</description>
         <pubDate>Thu, 19 Oct 2017 00:00:00 +0800</pubDate>
@@ -76,14 +84,6 @@
         <pubDate>Fri, 05 May 2017 00:00:00 +0800</pubDate>
         <link>/posts/nginx-image</link>
         <guid isPermaLink="true">/posts/nginx-image</guid>
-      </item>
-    
-      <item>
-        <title>MYSQL视图与事件</title>
-        <description>事件类似于调度,按Mysql中的计时器来定时执行特定SQL,视图一指SQL语句的虚拟表</description>
-        <pubDate>Fri, 05 May 2017 00:00:00 +0800</pubDate>
-        <link>/posts/msyql-event-view</link>
-        <guid isPermaLink="true">/posts/msyql-event-view</guid>
       </item>
     
   </channel>

@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Aaron | Apache根据URL分开记录日志文件</title>
+  <meta name="description" content="在对日志进行分析时,可能需要对URL的日志进行分开记录.不改变源代码,apache写跨域代码">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:title" content="Apache根据URL分开记录日志文件">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="/posts/apache-setinvif-setheader">
+  <meta property="og:description" content="在对日志进行分析时,可能需要对URL的日志进行分开记录.不改变源代码,apache写跨域代码">
+  <meta property="og:site_name" content="Aaron">
+  <meta property="og:image" content="/assets/documentation/sample-image.jpg">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:url" content="/posts/apache-setinvif-setheader">
+  <meta name="twitter:title" content="Apache根据URL分开记录日志文件">
+  <meta name="twitter:description" content="在对日志进行分析时,可能需要对URL的日志进行分开记录.不改变源代码,apache写跨域代码">
+  <meta name="twitter:image" content="/assets/documentation/sample-image.jpg">
+
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link href="/feed.xml" type="application/rss+xml" rel="alternate" title="Aaron Last 10 blog posts" />
+
+  
+    <link type="text/css" rel="stylesheet" href="/assets/light.css">
+  
+</head>
+
+<body>
+  <main role="main">
+    <div class="grid grid-centered">
+      <div class="grid-cell">
+        <nav class="header-nav reveal">
+  <a href="/" class="header-logo" title="Aaron">Aaron</a>
+  <ul class="header-links">
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      <li>
+        <a href="/feed.xml" target="_blank" title="RSS">
+          <span class="icon icon-social-rss"></span>
+        </a>
+      </li>
+    
+  </ul>
+</nav>
+
+        <article class="article reveal">
+          <header class="article-header">
+            <h1>Apache根据URL分开记录日志文件</h1>
+            <p>在对日志进行分析时,可能需要对URL的日志进行分开记录.不改变源代码,apache写跨域代码</p>
+            <div class="article-list-footer">
+              <span class="article-list-date">
+                April 10, 2018
+              </span>
+              <span class="article-list-divider">-</span>
+              <span class="article-list-minutes">
+                
+                
+                  1 minute read
+                
+              </span>
+              <span class="article-list-divider">-</span>
+              <div class="article-list-tags">
+                
+                  <a href="/tag/Apache">Apache</a>
+                
+                  <a href="/tag/header_module">header_module</a>
+                
+                  <a href="/tag/SetInvIF">SetInvIF</a>
+                
+              </div>
+            </div>
+          </header>
+
+          <div class="article-content">
+            <h1 id="初衷">初衷</h1>
+<p>WEB端与手机端的代码写在一套里面,域名相同.只是请求方法不一致.
+由于手机有推送或AJAX循询,导致日志量海量增加.在根据日志分析时,带来困难.影响结果</p>
+
+<p>#解决方案:</p>
+
+<figure class="highlight"><pre><code class="language-conf" data-lang="conf">    <span class="c"># 启用`setenvif_module`模块
+</span>    &lt;<span class="n">ifModule</span> <span class="n">setenvif_module</span>&gt;
+        <span class="n">SetEnvIf</span> <span class="n">Request_URI</span> <span class="s2">"^/index.php.*"</span> <span class="n">php</span>                <span class="c">#记录所有的php日志,设置环境变量 php
+</span>        <span class="n">SetEnvIf</span> <span class="n">Request_URI</span> <span class="s2">"^/index.php/AppTur.*"</span> <span class="n">appcan</span> !<span class="n">php</span> <span class="c">#如果不加!php,会重复记录日志. !php表示删除php环境变量
+</span>        <span class="n">CustomLog</span> <span class="n">logs</span>/<span class="n">access_tur_appcan</span>.<span class="n">log</span> <span class="n">combined</span> <span class="n">env</span>=<span class="n">appcan</span> <span class="c">#根据环境变量进行日志记录
+</span>        <span class="n">CustomLog</span> <span class="n">logs</span>/<span class="n">access_tur_web</span>.<span class="n">log</span> <span class="n">combined</span> <span class="n">env</span>=<span class="n">php</span>
+    &lt;/<span class="n">ifModule</span>&gt;</code></pre></figure>
+
+<p>#节外生枝
+同事做一个微信端访问mp4视频, 非同一域名, 存在跨域问题.怎么只对mp4文件进行允许跨域设置.
+解决方案,跟上面差不多.需要在请求mp4时,直接在apache写header头 “Access-Control-Allow-Origin”.
+同时需要启用 <code class="highlighter-rouge">headers_module</code> 模块</p>
+
+<figure class="highlight"><pre><code class="language-conf" data-lang="conf">&lt;<span class="n">ifModule</span> <span class="n">setenvif_module</span>&gt;
+    &lt;<span class="n">ifModule</span> <span class="n">headers_module</span>&gt;
+        <span class="n">SetEnvIf</span> <span class="n">Request_URI</span> <span class="s2">".*\.mp4"</span> <span class="n">mp4</span>
+        <span class="n">Header</span> <span class="n">set</span> <span class="n">Access</span>-<span class="n">Control</span>-<span class="n">Allow</span>-<span class="n">Origin</span> <span class="s2">"http://vue:8086"</span> <span class="n">env</span>=<span class="n">mp4</span>
+    &lt;/<span class="n">ifModule</span>&gt;
+&lt;/<span class="n">ifModule</span>&gt;</code></pre></figure>
+
+          </div>
+
+          <div class="article-share">
+            
+            <a href="" title="Share on Twitter" onclick="window.open('https://twitter.com/home?status=Apache根据URL分开记录日志文件 - /posts/apache-setinvif-setheader ', 'newwindow', 'width=500, height=225'); return false;">
+              <span class="icon icon-social-twitter"></span>
+            </a>
+            <a href="" title="Share on Facebook" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=/posts/apache-setinvif-setheader', 'newwindow', 'width=500, height=500'); return false;">
+              <span class="icon icon-social-facebook"></span>
+            </a>
+            <a href="" title="Share on Google+" onclick="window.open('https://plus.google.com/share?url=/posts/apache-setinvif-setheader', 'newwindow', 'width=550, height=400'); return false;">
+              <span class="icon icon-social-googleplus"></span>
+            </a>
+          </div>
+
+          
+        </article>
+        <footer class="footer reveal">
+  <p>
+    -- 勤于耕,荒于嘻 
+    <a href="/about" title="About me">关于我</a><!-- . Download it <a href="https://github.com/nielsenramon/chalk" target="_blank" title="Download Chalk">here --></a>.
+  </p>
+</footer>
+
+      </div>
+    </div>
+  </main>
+  <script type="text/javascript" src="/assets/vendor.js"></script>
+<script type="text/javascript" src="/assets/application.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Cormorant Garamond:700', 'Lato:300,400,700']
+    }
+  });
+</script>
+
+
+
+</body>
+</html>
