@@ -7,6 +7,14 @@
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>繁琐的复制系统!!!</title>
+        <description>程序员最怕繁琐的事件了!</description>
+        <pubDate>Fri, 22 Jun 2018 00:00:00 +0800</pubDate>
+        <link>/posts/shell-copy-parse</link>
+        <guid isPermaLink="true">/posts/shell-copy-parse</guid>
+      </item>
+    
+      <item>
         <title>Apache根据URL分开记录日志文件</title>
         <description>在对日志进行分析时,可能需要对URL的日志进行分开记录.不改变源代码,apache写跨域代码</description>
         <pubDate>Tue, 10 Apr 2018 00:00:00 +0800</pubDate>
@@ -76,14 +84,6 @@
         <pubDate>Fri, 05 May 2017 00:00:00 +0800</pubDate>
         <link>/posts/nginx-url-brance</link>
         <guid isPermaLink="true">/posts/nginx-url-brance</guid>
-      </item>
-    
-      <item>
-        <title>http_image_filter_module模块,根据URL生成不同尺寸的图片</title>
-        <description>http_image_filter_module模块,根据URL生成不同尺寸的图片</description>
-        <pubDate>Fri, 05 May 2017 00:00:00 +0800</pubDate>
-        <link>/posts/nginx-image</link>
-        <guid isPermaLink="true">/posts/nginx-image</guid>
       </item>
     
   </channel>

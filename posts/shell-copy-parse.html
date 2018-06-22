@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Aaron | 繁琐的复制系统!!!</title>
+  <meta name="description" content="程序员最怕繁琐的事件了!">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:title" content="繁琐的复制系统!!!">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="/posts/shell-copy-parse">
+  <meta property="og:description" content="程序员最怕繁琐的事件了!">
+  <meta property="og:site_name" content="Aaron">
+  <meta property="og:image" content="/assets/documentation/sample-image.jpg">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:url" content="/posts/shell-copy-parse">
+  <meta name="twitter:title" content="繁琐的复制系统!!!">
+  <meta name="twitter:description" content="程序员最怕繁琐的事件了!">
+  <meta name="twitter:image" content="/assets/documentation/sample-image.jpg">
+
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link href="/feed.xml" type="application/rss+xml" rel="alternate" title="Aaron Last 10 blog posts" />
+
+  
+    <link type="text/css" rel="stylesheet" href="/assets/light.css">
+  
+</head>
+
+<body>
+  <main role="main">
+    <div class="grid grid-centered">
+      <div class="grid-cell">
+        <nav class="header-nav reveal">
+  <a href="/" class="header-logo" title="Aaron">Aaron</a>
+  <ul class="header-links">
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      <li>
+        <a href="/feed.xml" target="_blank" title="RSS">
+          <span class="icon icon-social-rss"></span>
+        </a>
+      </li>
+    
+  </ul>
+</nav>
+
+        <article class="article reveal">
+          <header class="article-header">
+            <h1>繁琐的复制系统!!!</h1>
+            <p>程序员最怕繁琐的事件了!</p>
+            <div class="article-list-footer">
+              <span class="article-list-date">
+                June 22, 2018
+              </span>
+              <span class="article-list-divider">-</span>
+              <span class="article-list-minutes">
+                
+                
+                  4 minute read
+                
+              </span>
+              <span class="article-list-divider">-</span>
+              <div class="article-list-tags">
+                
+                  <a href="/tag/Shell">Shell</a>
+                
+              </div>
+            </div>
+          </header>
+
+          <div class="article-content">
+            <p>开设一个子系统,就恼火,占用时间.繁琐!!脚本可以节省自己+同事的时间</p>
+
+<h3 id="原理">原理</h3>
+<div class="highlighter-rouge"><pre class="highlight"><code>* rsync同步目录,并过滤目录,排除没必要的东西
+* 查看HTTPD配置文件,查看已占用端口
+* 创建数据库并导入初始数据
+* 修改数据库中的初始服务站
+* 修改HTTPD 配置
+* 修改 Application/Conf/config.php的数据库名
+* 重启HTTPD
+</code></pre>
+</div>
+
+<h3 id="如何使用">如何使用</h3>
+<p>/var/www/iserv_conf/init_iserv.sh</p>
+
+<h3 id="详细脚本">详细脚本</h3>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">HOSTNAME</span><span class="o">=</span><span class="s2">"127.0.0.1"</span>
+<span class="nv">PORT</span><span class="o">=</span>3306
+<span class="nv">USERNAME</span><span class="o">=</span><span class="s2">"user_***"</span>
+<span class="nv">PASSWORD</span><span class="o">=</span><span class="s2">"*****"</span>
+<span class="nv">HTTPD_CONF_DIR</span><span class="o">=</span>/etc/httpd/conf <span class="c">#httpd.conf 的配置目录</span>
+<span class="nv">HTTPD_VHOST_DIR</span><span class="o">=</span>/etc/httpd/conf.d <span class="c">#存放新项目的httpd配置目录</span>
+<span class="nv">WEBROOT</span><span class="o">=</span>/var/www <span class="c">#子项目网站存放根目录</span>
+<span class="nv">SOURCE</span><span class="o">=</span>apore <span class="c">#从哪个项目复制</span>
+<span class="nv">mysql_soruce</span><span class="o">=</span>/var/www/v_conf/init_data.sql <span class="c">#初始数据库文件</span>
+<span class="nv">exclude_file</span><span class="o">=</span>/var/www/v_conf/exclude <span class="c">#同步排除文件列表 想过滤请在这里面添加</span>
+
+<span class="nv">used_port</span><span class="o">=</span><span class="sb">`</span>grep <span class="s1">'^Listen \d*'</span> <span class="s2">"</span><span class="k">${</span><span class="nv">HTTPD_CONF_DIR</span><span class="k">}</span><span class="s2">"</span>/httpd.conf <span class="s2">"</span><span class="k">${</span><span class="nv">HTTPD_VHOST_DIR</span><span class="k">}</span><span class="s2">"</span>/<span class="k">*</span>.conf|awk <span class="s1">'{print $2}'</span>|sort -n|tr <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span> <span class="s2">" "</span><span class="sb">`</span>
+
+<span class="nb">read</span> -p <span class="s2">"请输入数据库名称(不要留空格) &gt;"</span> dbname
+<span class="nb">test</span><span class="o">=</span><span class="sb">`</span>mysql -h<span class="k">${</span><span class="nv">HOSTNAME</span><span class="k">}</span> -P<span class="k">${</span><span class="nv">PORT</span><span class="k">}</span> -u<span class="k">${</span><span class="nv">USERNAME</span><span class="k">}</span> -p<span class="k">${</span><span class="nv">PASSWORD</span><span class="k">}</span> -e <span class="s2">"show databases like '</span><span class="k">${</span><span class="nv">dbname</span><span class="k">}</span><span class="s2">'"</span> 2&gt;/dev/null<span class="sb">`</span>
+<span class="k">if</span> <span class="o">[</span> <span class="s2">"x</span><span class="k">${</span><span class="nv">test</span><span class="k">}</span><span class="s2">"</span> !<span class="o">=</span> <span class="s2">"x"</span> <span class="o">]</span>; <span class="k">then
+    </span><span class="nb">read</span> -t 5 -p <span class="s2">"数据库已经存在,是否删除原有库(y/n):"</span> drop
+    <span class="nv">drop</span><span class="o">=</span><span class="k">${</span><span class="nv">drop</span><span class="k">:-</span><span class="nv">n</span><span class="k">}</span>
+    <span class="k">if</span> <span class="o">[</span> <span class="s2">"x</span><span class="k">${</span><span class="nv">drop</span><span class="k">}</span><span class="s2">"</span> <span class="o">=</span> <span class="s2">"xn"</span> -o  <span class="s2">"x</span><span class="k">${</span><span class="nv">drop</span><span class="k">}</span><span class="s2">"</span> <span class="o">=</span> <span class="s2">"xN"</span> <span class="o">]</span> ; <span class="k">then
+        </span><span class="nb">echo</span> <span class="s2">"退出!"</span>
+        <span class="nb">exit </span>3
+    <span class="k">fi
+fi
+
+</span><span class="nb">echo</span> <span class="s2">"---------httpd 己用端口-------------"</span>
+<span class="nb">echo</span> <span class="s2">"</span><span class="k">${</span><span class="nv">used_port</span><span class="k">}</span><span class="s2">"</span>
+<span class="nb">echo</span> <span class="s2">"-----------------------------------"</span>
+<span class="nb">read</span> -p <span class="s2">"请输入WEB端口&gt;"</span> h_port
+<span class="k">if</span> <span class="o">[</span> <span class="s2">"x</span><span class="k">${</span><span class="nv">h_port</span><span class="k">}</span><span class="s2">"</span> <span class="o">=</span> <span class="s2">"x"</span> <span class="o">]</span>; <span class="k">then
+    </span><span class="nb">echo</span> -e <span class="s2">"端口不能为空</span><span class="se">\n</span><span class="s2">"</span>
+    <span class="nb">exit </span>1
+<span class="k">else
+    </span><span class="nv">portarr</span><span class="o">=(</span><span class="nv">$used_port</span><span class="o">)</span>
+    <span class="k">for </span>po <span class="k">in</span> <span class="k">${</span><span class="nv">portarr</span><span class="p">[@]</span><span class="k">}</span>
+    <span class="k">do
+        if</span> <span class="o">[</span> <span class="s2">"x</span><span class="k">${</span><span class="nv">po</span><span class="k">}</span><span class="s2">"</span> <span class="o">=</span> <span class="s2">"x</span><span class="k">${</span><span class="nv">h_port</span><span class="k">}</span><span class="s2">"</span> <span class="o">]</span>; <span class="k">then
+            </span><span class="nb">echo</span> -e <span class="s2">"端口已经被占用!</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="nb">exit </span>2
+        <span class="k">fi
+    done
+fi
+
+</span><span class="nb">read</span> -p <span class="s2">"请输入项目名称(不要留空格)&gt; "</span> webfolder
+<span class="k">if</span> <span class="o">[</span> -d <span class="s2">"</span><span class="k">${</span><span class="nv">WEBROOT</span><span class="k">}</span><span class="s2">/</span><span class="k">${</span><span class="nv">webfolder</span><span class="k">}</span><span class="s2">"</span> <span class="o">]</span>; <span class="k">then
+    </span><span class="nb">read</span> -t 5 -p <span class="s2">"目录已存在,是否覆盖?(y/n):"</span> cover
+<span class="k">fi
+</span><span class="nv">cover</span><span class="o">=</span><span class="k">${</span><span class="nv">cover</span><span class="k">:-</span><span class="s1">'y'</span><span class="k">}</span>
+<span class="k">if</span> <span class="o">[</span> <span class="s2">"x</span><span class="k">${</span><span class="nv">cover</span><span class="k">}</span><span class="s2">"</span> <span class="o">=</span> <span class="s2">"xn"</span> <span class="o">]</span>; <span class="k">then
+    </span><span class="nb">echo</span> <span class="s2">"...退出!</span><span class="k">${</span><span class="nv">cover</span><span class="k">}</span><span class="s2">"</span>
+    <span class="nb">exit </span>4
+<span class="k">fi
+
+</span><span class="nb">read</span> -p <span class="s2">"请输入初始服务站名称(不要留空格)&gt; "</span> department
+<span class="nv">department</span><span class="o">=</span><span class="k">${</span><span class="nv">department</span><span class="k">:-</span><span class="nv">$dbname</span><span class="k">}</span>
+<span class="nv">department</span><span class="o">=</span><span class="k">${</span><span class="nv">department</span><span class="p">/grg/</span><span class="k">}</span>
+<span class="nv">department</span><span class="o">=</span><span class="s2">"</span><span class="k">$(</span>tr <span class="s1">'[:lower:]'</span> <span class="s1">'[:upper:]'</span> <span class="o">&lt;&lt;&lt;</span> <span class="k">${</span><span class="nv">department</span>:0:1<span class="k">})${</span><span class="nv">department</span>:1<span class="k">}</span><span class="s2">"</span>
+
+<span class="nb">echo</span> <span class="s2">"准备复制同步文件..."</span>
+rsync -a --exclude-from<span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">exclude_file</span><span class="k">}</span><span class="s2">"</span> <span class="s2">"</span><span class="k">${</span><span class="nv">WEBROOT</span><span class="k">}</span><span class="s2">/</span><span class="k">${</span><span class="nv">SOURCE</span><span class="k">}</span><span class="s2">/"</span> <span class="s2">"</span><span class="k">${</span><span class="nv">WEBROOT</span><span class="k">}</span><span class="s2">/</span><span class="k">${</span><span class="nv">webfolder</span><span class="k">}</span><span class="s2">"</span>
+<span class="k">if</span> <span class="o">[</span> <span class="nv">$?</span> -ne 0 <span class="o">]</span>; <span class="k">then
+    </span><span class="nb">echo</span> <span class="s2">"复制文件失败!"</span>
+    <span class="nb">exit </span>6
+<span class="k">fi
+</span><span class="nb">echo</span> <span class="s2">"准备导入初始化数据库..."</span>
+<span class="nv">DBNAME</span><span class="o">=</span><span class="nv">$dbname</span>
+<span class="nv">create_db_sql</span><span class="o">=</span><span class="s2">"drop database if EXISTS </span><span class="k">${</span><span class="nv">DBNAME</span><span class="k">}</span><span class="s2">;CREATE DATABASE </span><span class="nv">$DBNAME</span><span class="s2">  DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;"</span>
+<span class="nv">update_base_depart</span><span class="o">=</span><span class="s2">"update sm_base_department set department_name='</span><span class="k">${</span><span class="nv">department</span><span class="k">}</span><span class="s2">' where id=200001 limit 1;"</span>
+mysql -h<span class="k">${</span><span class="nv">HOSTNAME</span><span class="k">}</span> -P<span class="k">${</span><span class="nv">PORT</span><span class="k">}</span> -u<span class="k">${</span><span class="nv">USERNAME</span><span class="k">}</span> -p<span class="k">${</span><span class="nv">PASSWORD</span><span class="k">}</span> -e <span class="s2">"</span><span class="k">${</span><span class="nv">create_db_sql</span><span class="k">}</span><span class="s2">"</span> 2&gt;/dev/null
+<span class="nv">s1</span><span class="o">=</span><span class="nv">$?</span>
+<span class="nb">echo</span> <span class="s2">"正在导入数据..."</span>
+mysql -h<span class="k">${</span><span class="nv">HOSTNAME</span><span class="k">}</span> -P<span class="k">${</span><span class="nv">PORT</span><span class="k">}</span> -u<span class="k">${</span><span class="nv">USERNAME</span><span class="k">}</span> -p<span class="k">${</span><span class="nv">PASSWORD</span><span class="k">}</span> <span class="k">${</span><span class="nv">DBNAME</span><span class="k">}</span> &lt; <span class="s2">"</span><span class="k">${</span><span class="nv">mysql_soruce</span><span class="k">}</span><span class="s2">"</span> 2&gt;/dev/null
+<span class="nv">s2</span><span class="o">=</span><span class="nv">$?</span>
+<span class="nb">echo</span> <span class="s2">"更新服务站名称..."</span>
+mysql -h<span class="k">${</span><span class="nv">HOSTNAME</span><span class="k">}</span> -P<span class="k">${</span><span class="nv">PORT</span><span class="k">}</span> -u<span class="k">${</span><span class="nv">USERNAME</span><span class="k">}</span> -p<span class="k">${</span><span class="nv">PASSWORD</span><span class="k">}</span> <span class="k">${</span><span class="nv">DBNAME</span><span class="k">}</span> -e <span class="s2">"</span><span class="k">${</span><span class="nv">update_base_depart</span><span class="k">}</span><span class="s2">"</span>  2&gt;/dev/null
+<span class="nv">s3</span><span class="o">=</span><span class="nv">$?</span>
+<span class="nb">echo</span> -e <span class="s2">"Listen </span><span class="k">${</span><span class="nv">h_port</span><span class="k">}</span><span class="se">\n</span><span class="s2">&lt;VirtualHost *:</span><span class="k">${</span><span class="nv">h_port</span><span class="k">}</span><span class="s2">&gt;</span><span class="se">\n\t</span><span class="s2">DocumentRoot </span><span class="se">\"</span><span class="k">${</span><span class="nv">WEBROOT</span><span class="k">}</span><span class="s2">/</span><span class="k">${</span><span class="nv">webfolder</span><span class="k">}</span><span class="se">\"\n\t</span><span class="s2">ServerName localhost</span><span class="se">\n</span><span class="s2">&lt;/VirtualHost&gt;</span><span class="se">\n</span><span class="s2">"</span> &gt; <span class="s2">"</span><span class="k">${</span><span class="nv">HTTPD_VHOST_DIR</span><span class="k">}</span><span class="s2">/</span><span class="k">${</span><span class="nv">webfolder</span><span class="k">}</span><span class="s2">.conf"</span>
+<span class="nv">s4</span><span class="o">=</span><span class="nv">$?</span>
+<span class="nb">echo</span> <span class="s2">"OK! 请修改系统Logo"</span>
+<span class="nv">s5</span><span class="o">=</span><span class="nv">$[$s1</span>+<span class="nv">$s2</span>+<span class="nv">$s3</span>+<span class="nv">$s4</span><span class="o">]</span>
+<span class="nv">old_database</span><span class="o">=</span><span class="k">$(</span>grep <span class="s1">'DB_NAME'</span> <span class="s2">"</span><span class="k">${</span><span class="nv">WEBROOT</span><span class="k">}</span><span class="s2">/</span><span class="k">${</span><span class="nv">webfolder</span><span class="k">}</span><span class="s2">/Application/Conf/config.php"</span>|sed <span class="s1">'s/[[:space:]]//g;s/\t//g'</span>|grep -v <span class="s1">'^//'</span>|awk -F<span class="s2">"'"</span> <span class="s1">'{print $4}'</span>|sed <span class="s2">"s/</span><span class="se">\'</span><span class="s2">//g;s/,//g"</span><span class="k">)</span>
+sed -i.bak <span class="s2">"s|</span><span class="k">${</span><span class="nv">old_database</span><span class="k">}</span><span class="s2">|</span><span class="k">${</span><span class="nv">DBNAME</span><span class="k">}</span><span class="s2">|g"</span> <span class="s2">"</span><span class="k">${</span><span class="nv">WEBROOT</span><span class="k">}</span><span class="s2">/</span><span class="k">${</span><span class="nv">webfolder</span><span class="k">}</span><span class="s2">/Application/Conf/config.php"</span>
+rm -rf <span class="s2">"</span><span class="nv">$WEBROOT</span><span class="s2">/</span><span class="nv">$webfolder</span><span class="s2">/Application/Conf/config.php.bak"</span>
+<span class="k">if</span> <span class="o">[</span> <span class="nv">$s5</span> -eq 0 <span class="o">]</span>; <span class="k">then
+    </span>service httpd restart
+<span class="k">fi
+</span><span class="nb">echo</span> <span class="nv">$?</span></code></pre></figure>
+
+          </div>
+
+          <div class="article-share">
+            
+            <a href="" title="Share on Twitter" onclick="window.open('https://twitter.com/home?status=繁琐的复制系统!!! - /posts/shell-copy-parse ', 'newwindow', 'width=500, height=225'); return false;">
+              <span class="icon icon-social-twitter"></span>
+            </a>
+            <a href="" title="Share on Facebook" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=/posts/shell-copy-parse', 'newwindow', 'width=500, height=500'); return false;">
+              <span class="icon icon-social-facebook"></span>
+            </a>
+            <a href="" title="Share on Google+" onclick="window.open('https://plus.google.com/share?url=/posts/shell-copy-parse', 'newwindow', 'width=550, height=400'); return false;">
+              <span class="icon icon-social-googleplus"></span>
+            </a>
+          </div>
+
+          
+        </article>
+        <footer class="footer reveal">
+  <p>
+    -- 勤于耕,荒于嘻 
+    <a href="/about" title="About me">关于我</a><!-- . Download it <a href="https://github.com/nielsenramon/chalk" target="_blank" title="Download Chalk">here --></a>.
+  </p>
+</footer>
+
+      </div>
+    </div>
+  </main>
+  <script type="text/javascript" src="/assets/vendor.js"></script>
+<script type="text/javascript" src="/assets/application.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Cormorant Garamond:700', 'Lato:300,400,700']
+    }
+  });
+</script>
+
+
+
+</body>
+</html>

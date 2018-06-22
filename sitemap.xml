@@ -2,15 +2,15 @@
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>/tag/design/</loc>
-<lastmod>2018-04-10T15:59:01+08:00</lastmod>
+<lastmod>2018-06-22T12:16:07+08:00</lastmod>
 </url>
 <url>
 <loc>/tag/jekyll/</loc>
-<lastmod>2018-04-10T15:59:01+08:00</lastmod>
+<lastmod>2018-06-22T12:16:07+08:00</lastmod>
 </url>
 <url>
 <loc>/tag/web/</loc>
-<lastmod>2018-04-10T15:59:01+08:00</lastmod>
+<lastmod>2018-06-22T12:16:07+08:00</lastmod>
 </url>
 <url>
 <loc>/posts/chalk-sample-post-with-all-elements</loc>
@@ -83,6 +83,10 @@
 <url>
 <loc>/posts/apache-setinvif-setheader</loc>
 <lastmod>2018-04-10T00:00:00+08:00</lastmod>
+</url>
+<url>
+<loc>/posts/shell-copy-parse</loc>
+<lastmod>2018-06-22T00:00:00+08:00</lastmod>
 </url>
 <url>
 <loc>/about</loc>

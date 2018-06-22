@@ -84,10 +84,11 @@
 
           <div class="article-content">
             <h1 id="初衷">初衷</h1>
+
 <p>WEB端与手机端的代码写在一套里面,域名相同.只是请求方法不一致.
 由于手机有推送或AJAX循询,导致日志量海量增加.在根据日志分析时,带来困难.影响结果</p>
 
-<p>#解决方案:</p>
+<h1 id="解决方案">解决方案</h1>
 
 <figure class="highlight"><pre><code class="language-conf" data-lang="conf">    <span class="c"># 启用`setenvif_module`模块
 </span>    &lt;<span class="n">ifModule</span> <span class="n">setenvif_module</span>&gt;
@@ -97,8 +98,9 @@
 </span>        <span class="n">CustomLog</span> <span class="n">logs</span>/<span class="n">access_tur_web</span>.<span class="n">log</span> <span class="n">combined</span> <span class="n">env</span>=<span class="n">php</span>
     &lt;/<span class="n">ifModule</span>&gt;</code></pre></figure>
 
-<p>#节外生枝
-同事做一个微信端访问mp4视频, 非同一域名, 存在跨域问题.怎么只对mp4文件进行允许跨域设置.
+<h1 id="节外生枝">节外生枝</h1>
+
+<p>同事做一个微信端访问mp4视频, 非同一域名, 存在跨域问题.怎么只对mp4文件进行允许跨域设置.
 解决方案,跟上面差不多.需要在请求mp4时,直接在apache写header头 “Access-Control-Allow-Origin”.
 同时需要启用 <code class="highlighter-rouge">headers_module</code> 模块</p>
 
