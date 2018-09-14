@@ -87,13 +87,12 @@
 
 <h3 id="安装php信息">安装PHP信息</h3>
 
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash">    brew install php
-    brew install php@5.6
-    </code></pre></figure>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">brew install php
+brew install php@5.6</code></pre></figure>
 
 <p>安装完成后,可以看见生成pecl的配置文件</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>/usr/local/Cellar/php/7.2.10/bin/pear config-set php_ini /usr/local/etc/php/7.2/php.ini system
+<p>/usr/local/Cellar/php/7.2.10/bin/pear config-set php_ini /usr/local/etc/php/7.2/php.ini system
 /usr/local/Cellar/php/7.2.10/bin/pear config-set php_dir /usr/local/share/pear system
 /usr/local/Cellar/php/7.2.10/bin/pear config-set doc_dir /usr/local/share/pear/doc system
 /usr/local/Cellar/php/7.2.10/bin/pear config-set ext_dir /usr/local/lib/php/pecl/20170718 system
@@ -104,9 +103,9 @@
 /usr/local/Cellar/php/7.2.10/bin/pear config-set man_dir /usr/local/share/man system
 /usr/local/Cellar/php/7.2.10/bin/pear config-set test_dir /usr/local/share/pear/test system
 /usr/local/Cellar/php/7.2.10/bin/pear config-set php_bin /usr/local/opt/php/bin/php system
-/usr/local/Cellar/php/7.2.10/bin/pear update-channels
+/usr/local/Cellar/php/7.2.10/bin/pear update-channels</p>
 
-/usr/local/Cellar/php@5.6/5.6.37/bin/pear config-set php_ini /usr/local/etc/php/5.6/php.ini system
+<p>/usr/local/Cellar/php@5.6/5.6.37/bin/pear config-set php_ini /usr/local/etc/php/5.6/php.ini system
 /usr/local/Cellar/php@5.6/5.6.37/bin/pear config-set php_dir /usr/local/share/pear@5.6 system
 /usr/local/Cellar/php@5.6/5.6.37/bin/pear config-set doc_dir /usr/local/share/pear@5.6/doc system
 /usr/local/Cellar/php@5.6/5.6.37/bin/pear config-set ext_dir /usr/local/lib/php/pecl/20131226 system
@@ -117,9 +116,7 @@
 /usr/local/Cellar/php@5.6/5.6.37/bin/pear config-set man_dir /usr/local/share/man system
 /usr/local/Cellar/php@5.6/5.6.37/bin/pear config-set test_dir /usr/local/share/pear@5.6/test system
 /usr/local/Cellar/php@5.6/5.6.37/bin/pear config-set php_bin /usr/local/opt/php@5.6/bin/php system
-/usr/local/Cellar/php@5.6/5.6.37/bin/pear update-channels
-</code></pre>
-</div>
+/usr/local/Cellar/php@5.6/5.6.37/bin/pear update-channels</p>
 
 <p>这两个目录就是存放扩展.so文件的地址, /usr/local/lib/php/pecl/20170718 与 /usr/local/lib/php/pecl/20131226</p>
 
@@ -128,21 +125,19 @@
 
 <h3 id="问题在哪呢">问题在哪呢?</h3>
 <div class="highlighter-rouge"><pre class="highlight"><code>pecl config-show 时,你会发现倒数第2行.
-
-User Configuration File        Filename         `/Users/aaron/.pearrc`
-这是一个缓存起来的 pear.conf文件, pecl 命令会优先加载此文件.而不是/usr/local/etc/php/5.6/pear.conf, /usr/local/etc/php/7.2/pear.conf, 导致,两个版本的 PHP 共用了一个配置.
 </code></pre>
 </div>
+
+<p>User Configuration File        Filename         <code class="highlighter-rouge">/Users/aaron/.pearrc</code>
+这是一个缓存起来的 pear.conf文件, pecl 命令会优先加载此文件.而不是/usr/local/etc/php/5.6/pear.conf, /usr/local/etc/php/7.2/pear.conf, 导致,两个版本的 PHP 共用了一个配置.</p>
 
 <h3 id="解决方案">解决方案:</h3>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>删除配置User Configuration File 项中的文件.
+<p>删除配置User Configuration File 项中的文件.</p>
 
-rm -rf /Users/aaron/.pearrc 
+<p>rm -rf /Users/aaron/.pearrc 
 再去安装就可以不冲突了.
-可以通过 pecl list 查看已安装的扩展
-</code></pre>
-</div>
+可以通过 pecl list 查看已安装的扩展</p>
 
 
           </div>
