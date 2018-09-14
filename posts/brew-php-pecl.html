@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Aaron | Macos brew安装多版本php,pecl安装扩展问题</title>
+  <meta name="description" content="Macos brew安装多版本php,pecl安装扩展问题,在5.6与7.2之间总是安装好一个,另一个版本扩展被删除了">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:title" content="Macos brew安装多版本php,pecl安装扩展问题">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="/posts/brew-php-pecl">
+  <meta property="og:description" content="Macos brew安装多版本php,pecl安装扩展问题,在5.6与7.2之间总是安装好一个,另一个版本扩展被删除了">
+  <meta property="og:site_name" content="Aaron">
+  <meta property="og:image" content="/assets/documentation/sample-image.jpg">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:url" content="/posts/brew-php-pecl">
+  <meta name="twitter:title" content="Macos brew安装多版本php,pecl安装扩展问题">
+  <meta name="twitter:description" content="Macos brew安装多版本php,pecl安装扩展问题,在5.6与7.2之间总是安装好一个,另一个版本扩展被删除了">
+  <meta name="twitter:image" content="/assets/documentation/sample-image.jpg">
+
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link href="/feed.xml" type="application/rss+xml" rel="alternate" title="Aaron Last 10 blog posts" />
+
+  
+    <link type="text/css" rel="stylesheet" href="/assets/light.css">
+  
+</head>
+
+<body>
+  <main role="main">
+    <div class="grid grid-centered">
+      <div class="grid-cell">
+        <nav class="header-nav reveal">
+  <a href="/" class="header-logo" title="Aaron">Aaron</a>
+  <ul class="header-links">
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      <li>
+        <a href="/feed.xml" target="_blank" title="RSS">
+          <span class="icon icon-social-rss"></span>
+        </a>
+      </li>
+    
+  </ul>
+</nav>
+
+        <article class="article reveal">
+          <header class="article-header">
+            <h1>Macos brew安装多版本php,pecl安装扩展问题</h1>
+            <p>Macos brew安装多版本php,pecl安装扩展问题,在5.6与7.2之间总是安装好一个,另一个版本扩展被删除了</p>
+            <div class="article-list-footer">
+              <span class="article-list-date">
+                September 14, 2018
+              </span>
+              <span class="article-list-divider">-</span>
+              <span class="article-list-minutes">
+                
+                
+                  1 minute read
+                
+              </span>
+              <span class="article-list-divider">-</span>
+              <div class="article-list-tags">
+                
+                  <a href="/tag/macos pecl">macos pecl</a>
+                
+                  <a href="/tag/多版本PHP">多版本PHP</a>
+                
+              </div>
+            </div>
+          </header>
+
+          <div class="article-content">
+            <p>至从2018.03.31起, Homebrew PHP扩展从brew tap 中移除了,没有再维护. 并且PHP版本只有5.6跟7.0+,默认php 安装的是 PHP7.2, 好在这些版本中的 PHP都自带安装了pecl, 到是省了不少事, pecl install xdebug 也算方便.</p>
+
+<p>但是在安装多版本时, pecl安装也就开始出问题了.</p>
+
+<h3 id="安装php信息">安装PHP信息</h3>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">    brew install php
+    brew install php@5.6
+    </code></pre></figure>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>安装完成后,可以看见生成pecl的配置文件
+</code></pre>
+</div>
+
+<figure class="highlight"><pre><code class="language-text" data-lang="text">    ==&gt; /usr/local/Cellar/php/7.2.10/bin/pear config-set php_ini /usr/local/etc/php/7.2/php.ini system
+    ==&gt; /usr/local/Cellar/php/7.2.10/bin/pear config-set php_dir /usr/local/share/pear system
+    ==&gt; /usr/local/Cellar/php/7.2.10/bin/pear config-set doc_dir /usr/local/share/pear/doc system
+    ==&gt; /usr/local/Cellar/php/7.2.10/bin/pear config-set ext_dir /usr/local/lib/php/pecl/20170718 system
+    ==&gt; /usr/local/Cellar/php/7.2.10/bin/pear config-set bin_dir /usr/local/opt/php/bin system
+    ==&gt; /usr/local/Cellar/php/7.2.10/bin/pear config-set data_dir /usr/local/share/pear/data system
+    ==&gt; /usr/local/Cellar/php/7.2.10/bin/pear config-set cfg_dir /usr/local/share/pear/cfg system
+    ==&gt; /usr/local/Cellar/php/7.2.10/bin/pear config-set www_dir /usr/local/share/pear/htdocs system
+    ==&gt; /usr/local/Cellar/php/7.2.10/bin/pear config-set man_dir /usr/local/share/man system
+    ==&gt; /usr/local/Cellar/php/7.2.10/bin/pear config-set test_dir /usr/local/share/pear/test system
+    ==&gt; /usr/local/Cellar/php/7.2.10/bin/pear config-set php_bin /usr/local/opt/php/bin/php system
+    ==&gt; /usr/local/Cellar/php/7.2.10/bin/pear update-channels
+
+
+    /usr/local/Cellar/php@5.6/5.6.37/bin/pear config-set php_ini /usr/local/etc/php/5.6/php.ini system
+    /usr/local/Cellar/php@5.6/5.6.37/bin/pear config-set php_dir /usr/local/share/pear@5.6 system
+    /usr/local/Cellar/php@5.6/5.6.37/bin/pear config-set doc_dir /usr/local/share/pear@5.6/doc system
+    /usr/local/Cellar/php@5.6/5.6.37/bin/pear config-set ext_dir /usr/local/lib/php/pecl/20131226 system
+    /usr/local/Cellar/php@5.6/5.6.37/bin/pear config-set bin_dir /usr/local/opt/php@5.6/bin system
+    /usr/local/Cellar/php@5.6/5.6.37/bin/pear config-set data_dir /usr/local/share/pear@5.6/data system
+    /usr/local/Cellar/php@5.6/5.6.37/bin/pear config-set cfg_dir /usr/local/share/pear@5.6/cfg system
+    /usr/local/Cellar/php@5.6/5.6.37/bin/pear config-set www_dir /usr/local/share/pear@5.6/htdocs system
+    /usr/local/Cellar/php@5.6/5.6.37/bin/pear config-set man_dir /usr/local/share/man system
+    /usr/local/Cellar/php@5.6/5.6.37/bin/pear config-set test_dir /usr/local/share/pear@5.6/test system
+    /usr/local/Cellar/php@5.6/5.6.37/bin/pear config-set php_bin /usr/local/opt/php@5.6/bin/php system
+    /usr/local/Cellar/php@5.6/5.6.37/bin/pear update-channels
+    </code></pre></figure>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>这两个目录就是存放扩展.so文件的地址, /usr/local/lib/php/pecl/20170718 与 /usr/local/lib/php/pecl/20131226
+
+`/usr/local/opt/php@5.6/bin/pecl config-show` 与 `/usr/local/opt/php/bin config-show` 如果ext-dir 目录是相同的.就会下面这种问题
+在5.6下 /usr/local/opt/php@5.6/bin/pecl install xdebug-2.5.5 安装的扩展后, 再在7.2下 /usr/local/opt/php/bin/pecl install xdebug 安装同样的扩展, 会提示已安装. 如果 uninstall 后, 再 install. 则
+/usr/local/lib/php/pecl/20131226 下的的 xdebug.so 会被删除.而20170718会新安装一条.
+不会两个目录同时存在
+</code></pre>
+</div>
+
+<h3 id="问题在哪呢">问题在哪呢?</h3>
+<div class="highlighter-rouge"><pre class="highlight"><code>pecl config-show 时,你会发现倒数第2行.
+
+User Configuration File        Filename         `/Users/aaron/.pearrc`
+这是一个缓存起来的 pear.conf文件, pecl 命令会优先加载此文件.而不是/usr/local/etc/php/5.6/pear.conf, /usr/local/etc/php/7.2/pear.conf, 导致,两个版本的 PHP 共用了一个配置.
+</code></pre>
+</div>
+
+<h3 id="解决方案">解决方案:</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>删除配置User Configuration File 项中的文件.
+
+rm -rf /Users/aaron/.pearrc 
+再去安装就可以不冲突了.
+可以通过 pecl list 查看已安装的扩展
+</code></pre>
+</div>
+
+
+          </div>
+
+          <div class="article-share">
+            
+            <a href="" title="Share on Twitter" onclick="window.open('https://twitter.com/home?status=Macos brew安装多版本php,pecl安装扩展问题 - /posts/brew-php-pecl ', 'newwindow', 'width=500, height=225'); return false;">
+              <span class="icon icon-social-twitter"></span>
+            </a>
+            <a href="" title="Share on Facebook" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=/posts/brew-php-pecl', 'newwindow', 'width=500, height=500'); return false;">
+              <span class="icon icon-social-facebook"></span>
+            </a>
+            <a href="" title="Share on Google+" onclick="window.open('https://plus.google.com/share?url=/posts/brew-php-pecl', 'newwindow', 'width=550, height=400'); return false;">
+              <span class="icon icon-social-googleplus"></span>
+            </a>
+          </div>
+
+          
+        </article>
+        <footer class="footer reveal">
+  <p>
+    -- 勤于耕,荒于嘻 
+    <a href="/about" title="About me">关于我</a><!-- . Download it <a href="https://github.com/nielsenramon/chalk" target="_blank" title="Download Chalk">here --></a>.
+  </p>
+</footer>
+
+      </div>
+    </div>
+  </main>
+  <script type="text/javascript" src="/assets/vendor.js"></script>
+<script type="text/javascript" src="/assets/application.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Cormorant Garamond:700', 'Lato:300,400,700']
+    }
+  });
+</script>
+
+
+
+</body>
+</html>
