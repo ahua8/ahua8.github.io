@@ -90,9 +90,8 @@
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash">brew install php
 brew install php@5.6</code></pre></figure>
 
-<p>安装完成后,可以看见生成pecl的配置文件</p>
-
-<p>/usr/local/Cellar/php/7.2.10/bin/pear config-set php_ini /usr/local/etc/php/7.2/php.ini system
+<p>安装完成后,可以看见生成pecl的配置文件
+/usr/local/Cellar/php/7.2.10/bin/pear config-set php_ini /usr/local/etc/php/7.2/php.ini system
 /usr/local/Cellar/php/7.2.10/bin/pear config-set php_dir /usr/local/share/pear system
 /usr/local/Cellar/php/7.2.10/bin/pear config-set doc_dir /usr/local/share/pear/doc system
 /usr/local/Cellar/php/7.2.10/bin/pear config-set ext_dir /usr/local/lib/php/pecl/20170718 system
@@ -103,9 +102,9 @@ brew install php@5.6</code></pre></figure>
 /usr/local/Cellar/php/7.2.10/bin/pear config-set man_dir /usr/local/share/man system
 /usr/local/Cellar/php/7.2.10/bin/pear config-set test_dir /usr/local/share/pear/test system
 /usr/local/Cellar/php/7.2.10/bin/pear config-set php_bin /usr/local/opt/php/bin/php system
-/usr/local/Cellar/php/7.2.10/bin/pear update-channels</p>
-
-<p>/usr/local/Cellar/php@5.6/5.6.37/bin/pear config-set php_ini /usr/local/etc/php/5.6/php.ini system
+/usr/local/Cellar/php/7.2.10/bin/pear update-channels
+———–
+/usr/local/Cellar/php@5.6/5.6.37/bin/pear config-set php_ini /usr/local/etc/php/5.6/php.ini system
 /usr/local/Cellar/php@5.6/5.6.37/bin/pear config-set php_dir /usr/local/share/pear@5.6 system
 /usr/local/Cellar/php@5.6/5.6.37/bin/pear config-set doc_dir /usr/local/share/pear@5.6/doc system
 /usr/local/Cellar/php@5.6/5.6.37/bin/pear config-set ext_dir /usr/local/lib/php/pecl/20131226 system
@@ -124,18 +123,14 @@ brew install php@5.6</code></pre></figure>
 在5.6下 /usr/local/opt/php@5.6/bin/pecl install xdebug-2.5.5 安装的扩展后, 再在7.2下 /usr/local/opt/php/bin/pecl install xdebug 安装同样的扩展, 会提示已安装. 如果 uninstall 后, 再 install. 则/usr/local/lib/php/pecl/20131226 下的的 xdebug.so 会被删除.而20170718会新安装一条.不会两个目录同时存在</p>
 
 <h3 id="问题在哪呢">问题在哪呢?</h3>
-<div class="highlighter-rouge"><pre class="highlight"><code>pecl config-show 时,你会发现倒数第2行.
-</code></pre>
-</div>
-
-<p>User Configuration File        Filename         <code class="highlighter-rouge">/Users/aaron/.pearrc</code>
-这是一个缓存起来的 pear.conf文件, pecl 命令会优先加载此文件.而不是/usr/local/etc/php/5.6/pear.conf, /usr/local/etc/php/7.2/pear.conf, 导致,两个版本的 PHP 共用了一个配置.</p>
+<p>pecl config-show 时,你会发现倒数第2行.
+User Configuration File        Filename         <code class="highlighter-rouge">/Users/aaron/.pearrc</code>
+这是一个缓存起来的 pear.conf文件, pecl 命令会优先加载此文件.
+而不是/usr/local/etc/php/5.6/pear.conf, /usr/local/etc/php/7.2/pear.conf, 导致,两个版本的 PHP 共用了一个配置.</p>
 
 <h3 id="解决方案">解决方案:</h3>
-
-<p>删除配置User Configuration File 项中的文件.</p>
-
-<p>rm -rf /Users/aaron/.pearrc 
+<p>删除配置User Configuration File 项中的文件.
+rm -rf /Users/aaron/.pearrc 
 再去安装就可以不冲突了.
 可以通过 pecl list 查看已安装的扩展</p>
 
